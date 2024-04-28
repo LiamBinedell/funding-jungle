@@ -1,7 +1,6 @@
-import { getAuth } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 function getLoggedIn(){
-    const auth = getAuth();
     return auth.currentUser !== null;
 }
 
@@ -20,7 +19,7 @@ addEventListener("DOMContentLoaded", (e) => {
         nav.appendChild(signUp);
         nav.appendChild(login);
 
-        document.appendChild(nav);
+        document.getElementById("welcomeHeader").appendChild(nav);
     } else {
         
     }
