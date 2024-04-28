@@ -19,6 +19,8 @@ addEventListener("DOMContentLoaded", (e) => {
         //append nav buttons
         nav.appendChild(signUp);
         nav.appendChild(login);
+
+        document.appendChild(nav);
     } else {
         
     }
