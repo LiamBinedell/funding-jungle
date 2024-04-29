@@ -1,8 +1,8 @@
-import { initializeApp } from 'firebase/app';
+import { app } from '../firebaseConfig';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
 
-export default function registerUser(name, surname, email, password, role, company){
+export function registerUser(name, surname, email, password, role, company){
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;

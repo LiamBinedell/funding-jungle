@@ -1,5 +1,3 @@
-import registerUser from "./userAuth.js";
-
 let nameValid = surnameValid = emailValid = passwordValid = roleValid = companyValid = true;
 
 function validateName(name, nameInput){
@@ -118,7 +116,30 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (allValid()){
-            alert(registerUser(nameInput.value, surnameInput.value, emailInput.value, passwordInput.value, roleSelect.value, ""));
+            try {
+                const postOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: nameInput.value,
+                        surname: surnameInput.value,
+                        email: emailInput.value,
+                        password: passwordInput.value,
+                        role: roleSelect.value,
+                        company: "",
+                    })
+                };
+
+                const PORT = process.env.PORT;
+                fetch(`localhost:${PORT}/register`, postOptions)
+                .then(data => data.text)
+                .then(response => alert(response))
+                .catch(error => alert("Error:", error));
+            } catch(error){
+                alert("Error:", error);
+            }
         }
     });
 });
