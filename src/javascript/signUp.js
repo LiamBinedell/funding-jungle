@@ -1,29 +1,34 @@
-// import { initializeApp } from 'firebase/app';
-// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-// import { addDoc, collection, getFirestore } from 'firebase/firestore'
-
 let nameValid = surnameValid = emailValid = passwordValid = roleValid = companyValid = true;
 
-function validateName(name){
+function validateName(name, nameInput){
     nameValid = name.trim() !== "";
+    renderWarning(nameInput, "invalidNameWarning", nameValid, "name");
 }
 
-function validateSurname(surname){
+function validateSurname(surname, surnameInput){
     surnameValid = surname.trim() !== "";
+    renderWarning(surnameInput, "invalidSurnameWarning", surnameValid, "surname");
 }
 
-function validateEmail(emailAddress){
+function validateEmail(emailAddress, emailInput){
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     emailValid = emailRegex.test(emailAddress);
+    renderWarning(emailInput, "invalidEmailWarning", emailValid, "email address");
 }
 
-function validatePass(password){
+function validatePass(password, passwordInput){
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     passwordValid = passwordRegex.test(password);
+    renderWarning(passwordInput, "invalidPassWarning", passwordValid, "password");
 }
 
-function validateCompany(company){
+function validateCompany(company, companyInput){
     companyValid = company.trim() !== "";
+    renderWarning(companyInput, "invalidCompanyWarning", companyValid, "company");
+}
+
+const allValid = () => {
+    return nameValid && surnameValid && emailValid && passwordValid && companyValid;
 }
 
 function renderWarning(inputId, warningId, validate, value){
@@ -50,29 +55,22 @@ document.addEventListener("DOMContentLoaded", function() {
     const passwordInput = document.getElementById("password");
     const roleSelect = document.getElementById("roleSelect");
     const roleSelectContainer = roleSelect.closest(".inputContainer");
+    const btnSignUp = document.getElementById("btnSignUp");
 
     nameInput.addEventListener("input", function() {
-        validateName(nameInput.value);
-
-        renderWarning(nameInput, "invalidNameWarning", nameValid, "name");
+        validateName(nameInput.value, nameInput);
     });
 
     surnameInput.addEventListener("input", function(){
-        validateSurname(surnameInput.value);
-
-        renderWarning(surnameInput, "invalidSurnameWarning", surnameValid, "surname");
+        validateSurname(surnameInput.value, surnameInput);
     });
 
     emailInput.addEventListener("input", function(){
-        validateEmail(emailInput.value);
-
-        renderWarning(emailInput, "invalidEmailWarning", emailValid, "email address");
+        validateEmail(emailInput.value, emailInput);
     });
 
     passwordInput.addEventListener("input", function(){
-        validatePass(passwordInput.value);
-
-        renderWarning(passwordInput, "invalidPassWarning", passwordValid, "password");
+        validatePass(passwordInput.value, passwordInput);
     });
 
     roleSelect.addEventListener("change", function() {
@@ -95,9 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
             roleSelectContainer.parentNode.insertBefore(companyInputContainer, roleSelectContainer.nextSibling);
 
             companyInput.addEventListener("input", function(){
-                validateCompany(companyInput.value);
-    
-                renderWarning(companyInput, "invalidCompanyWarning", companyValid, "company");
+                validateCompany(companyInput.value, companyInput);    
             });
         } else {
             // If the selected role is not "fundingManager", remove the company input if it exists
@@ -109,5 +105,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    btnSignUp.addEventListener("click", function() {
+        const companyInput = document.getElementById("company");
+        validateName(nameInput.value, nameInput);
+        validateSurname(surnameInput.value, surnameInput);
+        validateEmail(emailInput.value, emailInput);
+        validatePass(passwordInput.value, passwordInput);
+        if (companyInput){
+            validateCompany(companyInput.value, companyInput);
+        }
 
+        if (allValid()){
+            
+        }
+    });
 });
