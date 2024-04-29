@@ -1,7 +1,7 @@
 const { app } = require('@azure/functions');
 const { registerUser } = require('../../backend/userAuth');
 
-app.http('register', {
+app.post('register', {
     methods: ['POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
