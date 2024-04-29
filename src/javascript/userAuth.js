@@ -1,16 +1,16 @@
-const fireBaseAuth = require('firebase/auth');
-const fireStore = require('firebase/firestore');
-const auth = require('../firebaseConfig');
+import { initializeApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { addDoc, collection, getFirestore } from 'firebase/firestore';
 
 export default function registerUser(name, surname, email, password, role, company){
-    fireBaseAuth.createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;
 
-        const db = fireStore.getFirestore(auth.app);
-        const userRef = fireStore.collection(db, "users");
+        const db = getFirestore(auth.app);
+        const userRef = collection(db, "users");
 
-        fireStore.addDoc(userRef, {
+        addDoc(userRef, {
             uid: user.uid,
             email: email,
             name: name,
