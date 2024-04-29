@@ -15,7 +15,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 350px;
-    height: 400px;
+    height: auto;
 
     border-style: solid;
     border-color: black;
@@ -31,7 +31,15 @@ body {
 .inputContainer {
     border-style: double;
     border-radius: 1px;
-    width: 200px;
+    width: 200px; /* Adjusted width */
+    margin-bottom: 10px; /* Add margin bottom to create space for the warning message */
+    position: relative; /* Position relative for absolute positioning of warning message */
+}
+
+.warning {
+    color: red;
+    font-size: 15px;
+    margin-top: -10px;
 }
 
 input {
