@@ -6,5 +6,9 @@
   },
   "dependencies": {
     "firebase": "^10.11.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }
