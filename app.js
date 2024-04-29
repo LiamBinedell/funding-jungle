@@ -12,7 +12,7 @@ app.post("/register", async (req, res) => {
     res.send(response);
 });
 
-const PORT = process.env.PORT;
+const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
