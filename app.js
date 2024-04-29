@@ -4,7 +4,7 @@ const { registerUser } = require('./src/backend/userAuth');
 
 const app = express();
 
-app.use(express.static("./src"));
+app.use(express.json());
 
 app.post("/register", async (req, res) => {
     const {name, surname, email, password, role, company} = req.body;
