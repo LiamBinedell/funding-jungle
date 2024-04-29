@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 };
 
                 // const PORT = process.env.PORT;
-                fetch(`localhost:3000/register`, postOptions)
+                fetch("/register", postOptions)
                 .then(data => data.text)
                 .then(response => alert(response))
                 .catch(error => console.log("ERROR(FETCH):", error));
