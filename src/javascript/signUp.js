@@ -136,9 +136,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 fetch(`localhost:${PORT}/register`, postOptions)
                 .then(data => data.text)
                 .then(response => alert(response))
-                .catch(error => alert("Error:", error));
+                .catch(error => console.log("ERROR(FETCH):", error));
             } catch(error){
-                alert("Error:", error);
+                console.log("ERROR(TRY/CATCH):", error);
             }
         }
     });
