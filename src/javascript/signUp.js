@@ -1,4 +1,4 @@
-import { registerUser } from "./userAuth";
+import registerUser from "./userAuth.js";
 
 let nameValid = surnameValid = emailValid = passwordValid = roleValid = companyValid = true;
 
