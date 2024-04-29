@@ -2,7 +2,7 @@ const fireBaseAuth = require('firebase/auth');
 const fireStore = require('firebase/firestore');
 const auth = require('../firebaseConfig');
 
-export function registerUser(name, surname, email, password, role, company){
+export default function registerUser(name, surname, email, password, role, company){
     fireBaseAuth.createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;
