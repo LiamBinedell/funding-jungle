@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { registerUser } = require('./src/backend/userAuth');
+const { registerUser } = require('./backend/userAuth');
 
 const app = express();
 
