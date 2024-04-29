@@ -1,3 +1,5 @@
+import { registerUser } from "./userAuth";
+
 let nameValid = surnameValid = emailValid = passwordValid = roleValid = companyValid = true;
 
 function validateName(name, nameInput){
@@ -116,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (allValid()){
-            
+            alert(registerUser(nameInput.value, surnameInput.value, emailInput.value, passwordInput.value, roleSelect.value, ""));
         }
     });
 });
