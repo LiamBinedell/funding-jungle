@@ -17,7 +17,7 @@ app.use(cors());
 app.use('/api/register', registerRouter);
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, "components", "welcome.html"));
+    res.sendFile(path.join(__dirname, "components", "index.html"));
 });
 
 // app.get('/signUp.html', (req, res) => {
