@@ -8,10 +8,10 @@ app.use(cors());
 //app.use('/api/register', registerRouter);
 
 app.post('/api/register/', (req, res) => {
-
+    res.send("You've reached the api");
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
 });
