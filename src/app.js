@@ -1,6 +1,10 @@
-const express = require('express');
+// const express = require('express');
+// const app = express();
+// const registerRouter = require('../api/routes/register');
+
+import express from 'express';
 const app = express();
-const registerRouter = require('../api/routes/register');
+import registerRouter from '../api/routes/register';
 
 app.use('/api/register', registerRouter);
 
