@@ -8,4 +8,4 @@ router.post('/', (req, res) =>{
     res.send("You've reached the register api");
 });
 
-module.exports(router);
+module.exports = router;
