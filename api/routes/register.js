@@ -8,3 +8,5 @@ router.post('/', (req, res) =>{
     //firebaseApp.registerUser(name, surname, email, password, role, company);
     res.send("You've reached the register api");
 });
+
+module.exports(router);
