@@ -1,6 +1,5 @@
 const express = require('express');
 //const firebaseApp = require('../backend/userAuth')
-
 const router = express.Router();
 
 router.post('/', (req, res) =>{
