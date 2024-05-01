@@ -1,4 +1,6 @@
  // Import the functions you need from the SDKs you need
+
+ //TODO: these need to be require statements. we have the firebase dependency installed if that helps
  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
  //import { getAuth, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase/auth.js";
