@@ -35,8 +35,8 @@
  const auth = getAuth();
  
  // Route for user registration
- router.post('/api/register', (req, res) => {
-     const { name, surname, email, password, role } = req.body;
+ router.post('/', (req, res) => {
+     const { name, surname, email, password, role, company } = req.body;
  
      // Register user with email and password
     createUserWithEmailAndPassword(auth, email, password)
