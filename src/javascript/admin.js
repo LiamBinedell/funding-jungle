@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    //Todo: additional stuff    
     
     const buttons = document.querySelectorAll(".removeButton");
 
