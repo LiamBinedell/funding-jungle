@@ -7,6 +7,7 @@ const path = require('path');
 const registerRouter = require('./api/routes/register');
 const adminRouter = require('./api/routes/admin');
 
+
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, './')));
