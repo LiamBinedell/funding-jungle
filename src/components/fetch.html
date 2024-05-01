@@ -1,0 +1,74 @@
+<html>
+    <body>
+        <div id="ads">
+
+        </div>
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+        
+            const firebaseConfig = {
+              apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
+              authDomain: "contact-form-6d16d.firebaseapp.com",
+              databaseURL: "https://contact-form-6d16d-default-rtdb.firebaseio.com",
+              projectId: "contact-form-6d16d",
+              storageBucket: "contact-form-6d16d.appspot.com",
+              messagingSenderId: "554996497997",
+              appId: "1:554996497997:web:78a40239df3b559caae604",
+              measurementId: "G-N3J938V17H"
+            };
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            import {getDatabase, ref, get, child} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+            const db = getDatabase();
+            // Initialize Firebase
+            
+
+            let ads = document.getElementById('ads');
+            let no = 1;
+            function Getads(){
+
+                const  dbref = ref(db);
+                get(child(dbref, 'contactForm')).then((students)=>{
+                students.forEach(std => {
+                    AddadsAsListItem(std);
+
+                    
+                });
+            })
+
+        }
+        function AddadsAsListItem(std){
+            //let key = std.key;
+            let value = std.val();
+
+            let name = document.createElement('li');
+            let msg = document.createElement('li');
+            let company = document.createElement('li');
+            let header = document.createElement('h3');
+            let email = document.createElement('li');
+            let image = document.createElement('li');
+
+            name.innerHTML = "Name:" + value.name;
+            msg.innerHTML = "Description:" + value.msgContent;
+            company.innerHTML = "Company Name:" + value.companyName;
+            header.innerHTML = "Ad #" + no;
+            email.innerHTML = "Company Email:"+ value.emailid;
+            image.innerHTML  = "Advert:" + value.image;
+
+            let ul = document.createElement('ul');
+            ul.append(header,name,company,msg,email,image);
+
+            ads.append(ul);
+            no++ ;
+
+        }
+
+        window.addEventListener('load', Getads)
+          </script>
+
+        </script>
+    </body>
+</html>
