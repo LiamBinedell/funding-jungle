@@ -5,6 +5,7 @@
  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
  //import { getAuth, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase/auth.js";
 
+ const registerController = require('../controllers/registerController');
  // TODO: Add SDKs for Firebase products that you want to use
  // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -38,24 +39,24 @@
  
  // Route for user registration
  router.post('/', (req, res) => {
-     const { name, surname, email, password, role, company } = req.body;
- 
-     // Register user with email and password
+    const { name, surname, email, password, role, company } = req.body;
+    
+    // Register user with email and password
     createUserWithEmailAndPassword(auth, email, password)
-         .then((userCredential) => {
-             // Additional user data (name, surname, role) can be stored in Firebase database or other storage
-             // For simplicity, let's just log the user data here
-             const user = userCredential.user;
-             console.log("User registered:", user.uid, name, surname, role);
- 
-             // Send success response
-             res.status(200).json({ message: "User registered successfully." });
-         })
-         .catch((error) => {
-             // Handle registration errors
-             console.error("Error registering user:", error);
-             res.status(500).json({ error: "Error registering user." });
-         });
+        .then((userCredential) => {
+            // Additional user data (name, surname, role) can be stored in Firebase database or other storage
+            // For simplicity, let's just log the user data here
+            const user = userCredential.user;
+            console.log("User registered:", user.uid, name, surname, role);
+
+            // Send success response
+            res.status(200).json({ message: "User registered successfully." });
+        })
+        .catch((error) => {
+            // Handle registration errors
+            console.error("Error registering user:", error);
+            res.status(500).json({ error: "Error registering user." });
+        });
  });
  
  module.exports = router;
