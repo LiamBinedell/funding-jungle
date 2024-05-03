@@ -22,28 +22,45 @@ const auth = authorization.getAuth();
 const express = require('express');
 const router = express.Router();
 
+async function checkIfAccountActivated(email){
+    const collectionRef = firestore.collection(db, "users");
+    const q = firestore.query(collectionRef, firestore.where("email", "==", email), firestore.where("role", "==", "fundingManager"), firestore.where("accountActivated", "==", false));
+
+    const docs = await firestore.getDocs(q);
+
+    if (docs.size > 0){
+        return false;
+    } else {
+        return true;
+    }
+}
+
 router.post('/', (req, res) => {
     const {email, pass} = req.body; 
 
-    authorization.signInWithEmailAndPassword(auth, email, pass)
-    .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(`USER LOGIN: ${user.uid}: ${email}`);
+    if (!checkIfAccountActivated(email))
+        res.status(401).send("Account pending verification. Please try again later");
+    else{
+        authorization.signInWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(`USER LOGIN: ${user.uid}: ${email}`);
 
-        const documentRef = firestore.doc(db, "users", user.uid);
-        firestore.getDoc(documentRef)
-        .then(documentSnapshot => {
-            if (documentSnapshot.exists()){
-                const role = documentSnapshot.data()["role"];
-                res.status(200).send(role);
-            }
+            const documentRef = firestore.doc(db, "users", user.uid);
+            firestore.getDoc(documentRef)
+            .then(documentSnapshot => {
+                if (documentSnapshot.exists()){
+                    const role = documentSnapshot.data()["role"];
+                    res.status(200).send(role);
+                }
+            })
+            .catch(error => console.error("ERROR:", error));
         })
-        .catch(error => console.error("ERROR:", error));
-    })
-    .catch((error) => {
-        console.error("Error logging in", error);
-        res.status(401).send("Invalid email or password");
-    });
+        .catch((error) => {
+            console.error("Error logging in", error);
+            res.status(401).send("Invalid email or password");
+        });
+    }
 });
 
 module.exports = router;

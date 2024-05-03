@@ -18,11 +18,21 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch('/api/login/', postOptions)
     .then(data => data.text())
     .then(response => {
-      alert(`${response} successfully logged in`);
       switch (response){
         case "applicant":
+          alert('Applicant successfully logged in');
+          window.location.href = "../components/applicant.html";
           break;
         case "fundingManager":
+          alert('Funding manager successfully logged in');
+          window.location.href = "../components/fundingManager.html";
+          break;
+        case "admin":
+          alert('Admin successfully logged in');
+          window.location.href = "../components/admin.html";
+          break;
+        default:
+          alert(response);
           break;
       }
     })
