@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Messages | Firebase</title>
+    
+    <style>
+        /* Added some basic styles to give it a green theme */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .inputBox {
+            margin-bottom: 20px;
+        }
+        input[type="email"], textarea {
+            width: 100%;
+            padding: 15px; /* Increased padding to increase height */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px; /* Increased padding to increase height */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            height: 150px; /* Increased height for textarea */
+        }
+        input[type="file"] {
+            padding: 15px; /* Increased padding to increase height */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 15px 30px; /* Increased padding to increase height and width */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px; /* Increased font size for better visibility */
+        }
+        button[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+        .alert {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form action="" id="contactForm">
+            <div class="alert">Your message sent</div>
+
+            <div class="inputBox">
+                <label for="companyName">Company Name:</label>
+                <input type="text" id="companyName" placeholder="Company name" />
+            </div>
+            <div class="inputBox">
+                <label for="companyEmail">Company Email:</label>
+                <input type="email" id="companyEmail" placeholder="Company Email" />
+            </div>
+
+            <div class="inputBox">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" placeholder="Your name" />
+            </div>
+
+            <div class="inputBox">
+                <label for="msgContent">Message:</label>
+                <textarea id="msgContent" cols="30" rows="10" placeholder="Message"></textarea>
+            </div>
+            <div class="inputBox">
+                <label for="Inpimg">Attach Image:</label>
+                <img src="#" id="newimg" width="200" height="200">
+                <input type="file" id="Inpimg" />
+            </div>
+
+            <div class="inputBox">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../javascript/Adverts.js"></script>
+    
+
+</body>
+
+<script type="text/javascript">
+    Inpimg.onchange = evt => {
+        const [file] = Inpimg.files
+        if (file) {
+            newimg.src = URL.createObjectURL(file)
+        }
+    }
+</script>
+</html>
