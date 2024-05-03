@@ -23,10 +23,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "components", "index.html"));
 });
 
-// app.get('/signUp.html', (req, res) => {
-//     res.sendFile(path.join(__dirname, "components", "signUp.html"));
-// });
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

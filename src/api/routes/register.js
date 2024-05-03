@@ -1,13 +1,8 @@
- // Import the functions you need from the SDKs you need
+ const express = require('express');
+ const authorization = require('firebase/auth');
+ const firebaseApp = require('firebase/app');
+ const firestore = require('firebase/firestore');
 
- //TODO: these need to be require statements. we have the firebase dependency installed if that helps
- import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
- import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
- //import { getAuth, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.11.1/firebase/auth.js";
-
- const registerController = require('../controllers/registerController');
- // TODO: Add SDKs for Firebase products that you want to use
- // https://firebase.google.com/docs/web/setup#available-libraries
 
  // Your web app's Firebase configuration
  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -23,34 +18,38 @@
  };
 
  // Initialize Firebase
- const app = initializeApp(firebaseConfig);
- const analytics = getAnalytics(app);
- //const auth = getAuth();
+ const firebaseDB = firebaseApp.initializeApp(firebaseConfig);
+ const db = firestore.getFirestore(firebaseDB);
 
- const express = require('express');
- //const firebaseApp = require('../backend/userAuth')
  const router = express.Router();
- 
- // Import Firebase Auth
- const { getAuth, createUserWithEmailAndPassword } = require("https://www.gstatic.com/firebasejs/10.11.1/firebase/auth.js");
- 
- // Get Firebase Auth instance
- const auth = getAuth();
- 
+ const auth = authorization.getAuth();
  // Route for user registration
  router.post('/', (req, res) => {
     const { name, surname, email, password, role, company } = req.body;
     
     // Register user with email and password
-    createUserWithEmailAndPassword(auth, email, password)
+    authorization.createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Additional user data (name, surname, role) can be stored in Firebase database or other storage
             // For simplicity, let's just log the user data here
             const user = userCredential.user;
+            firestore.setDoc(firestore.doc(db, "users", user.uid), {
+                email: email,
+                name: name,
+                role: role,
+                surname, surname,
+                uid: user.uid
+            })
+            .then(() => {
+                console.log("User doc created");
+            })
+            .catch((error) => {
+                console.error("ERROR:",error);
+            })
             console.log("User registered:", user.uid, name, surname, role);
 
             // Send success response
-            res.status(200).json({ message: "User registered successfully." });
+            res.status(200).json({ message: `User: ${user.email} created successfully` });
         })
         .catch((error) => {
             // Handle registration errors
