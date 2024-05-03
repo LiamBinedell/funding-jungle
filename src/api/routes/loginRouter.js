@@ -23,14 +23,22 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-    const {email, pass} = req.body;
+    const {email, pass} = req.body; 
 
     authorization.signInWithEmailAndPassword(auth, email, pass)
     .then((userCredential) => {
         const user = userCredential.user;
         console.log(`USER LOGIN: ${user.uid}: ${email}`);
 
-        res.status(200).send("Login successful! Redirecting...");
+        const documentRef = firestore.doc(db, "users", user.uid);
+        firestore.getDoc(documentRef)
+        .then(documentSnapshot => {
+            if (documentSnapshot.exists()){
+                const role = documentSnapshot.data()["role"];
+                res.status(200).send(role);
+            }
+        })
+        .catch(error => console.error("ERROR:", error));
     })
     .catch((error) => {
         console.error("Error logging in", error);

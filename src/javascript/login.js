@@ -18,8 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch('/api/login/', postOptions)
     .then(data => data.text())
     .then(response => {
-      alert(response);
-      
+      alert(`${response} successfully logged in`);
+      switch (response){
+        case "applicant":
+          break;
+        case "fundingManager":
+          break;
+      }
     })
     .catch(error => console.log("ERROR(FETCH):", error));
   });
