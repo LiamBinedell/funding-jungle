@@ -116,29 +116,28 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (allValid()){
-            try {
-                const postOptions = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        name: nameInput.value,
-                        surname: surnameInput.value,
-                        email: emailInput.value,
-                        password: passwordInput.value,
-                        role: roleSelect.value,
-                        company: "",
-                    })
-                };
+            const postOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: nameInput.value,
+                    surname: surnameInput.value,
+                    email: emailInput.value,
+                    password: passwordInput.value,
+                    role: roleSelect.value,
+                    company: "",
+                })
+            };
 
-                fetch('/api/register/', postOptions)
-                .then(data => data.text())
-                .then(response => alert(response))
-                .catch(error => console.log("ERROR(FETCH):", error));
-            } catch(error){
-                console.log("ERROR(TRY/CATCH):", error);
-            }
+            fetch('/api/register/', postOptions)
+            .then(data => data.text())
+            .then(response => {
+                alert(response);
+                window.location.href = "../components/login.html";
+            })
+            .catch(error => console.log("ERROR(FETCH):", error));
         }
     });
 });
