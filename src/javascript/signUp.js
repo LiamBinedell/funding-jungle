@@ -48,7 +48,7 @@ function renderWarning(inputId, warningId, validate, value){
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("name");
     const surnameInput = document.getElementById("surname");
     const emailInput = document.getElementById("emailAddress");
@@ -57,23 +57,23 @@ document.addEventListener("DOMContentLoaded", function() {
     const roleSelectContainer = roleSelect.closest(".inputContainer");
     const btnSignUp = document.getElementById("btnSignUp");
 
-    nameInput.addEventListener("input", function() {
+    nameInput.addEventListener("input", () => {
         validateName(nameInput.value, nameInput);
     });
 
-    surnameInput.addEventListener("input", function(){
+    surnameInput.addEventListener("input", () => {
         validateSurname(surnameInput.value, surnameInput);
     });
 
-    emailInput.addEventListener("input", function(){
+    emailInput.addEventListener("input", () => {
         validateEmail(emailInput.value, emailInput);
     });
 
-    passwordInput.addEventListener("input", function(){
+    passwordInput.addEventListener("input", () => {
         validatePass(passwordInput.value, passwordInput);
     });
 
-    roleSelect.addEventListener("change", function() {
+    roleSelect.addEventListener("change", () => {
         const selectedRole = roleSelect.value;
         
         // Check if the selected role is "fundingManager"
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Insert the company input section after the role select container
             roleSelectContainer.parentNode.insertBefore(companyInputContainer, roleSelectContainer.nextSibling);
 
-            companyInput.addEventListener("input", function(){
+            companyInput.addEventListener("input", () => {
                 validateCompany(companyInput.value, companyInput);    
             });
         } else {
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    btnSignUp.addEventListener("click", function() {
+    btnSignUp.addEventListener("click", () => {
         const companyInput = document.getElementById("company");
         validateName(nameInput.value, nameInput);
         validateSurname(surnameInput.value, surnameInput);
@@ -116,29 +116,29 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (allValid()){
-            try {
-                const postOptions = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        name: nameInput.value,
-                        surname: surnameInput.value,
-                        email: emailInput.value,
-                        password: passwordInput.value,
-                        role: roleSelect.value,
-                        company: "",
-                    })
-                };
+            const postOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: nameInput.value,
+                    surname: surnameInput.value,
+                    email: emailInput.value,
+                    password: passwordInput.value,
+                    role: roleSelect.value,
+                    company: "",
+                })
+            };
 
-                fetch('/api/register/', postOptions)
-                .then(data => data.text())
-                .then(response => alert(response))
-                .catch(error => console.log("ERROR(FETCH):", error));
-            } catch(error){
-                console.log("ERROR(TRY/CATCH):", error);
-            }
+            fetch('/api/register/', postOptions)
+            .then(data => 
+                data.text())
+            .then(response => {
+                alert(response);
+                window.location.href = "../components/login.html";
+            })
+            .catch(error => console.log("ERROR(FETCH):", error));
         }
     });
 });
