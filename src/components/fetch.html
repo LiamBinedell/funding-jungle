@@ -130,7 +130,7 @@
     adContainer.classList.add('ad-container');
 
     let adTitle = document.createElement('h3');
-    adTitle.textContent = "Ad #" + no;
+    adTitle.textContent = "Funding Advert " + no;
 
     let name = document.createElement('p');
     name.textContent = "Name: " + adData.name;
@@ -153,7 +153,7 @@
     datePosted.textContent = "Date Posted: " + adData.date;
 
     let adType = document.createElement('p');
-    adType.textContent = "Ad Type: " + adData.fundingType;
+    adType.textContent = "Funding Type: " + adData.fundingType;
 
     let applyButton = document.createElement('button');
     applyButton.textContent = "Apply";
@@ -163,7 +163,7 @@
     (function(adNumber) {
         applyButton.addEventListener('click', () => {
             // Handle application process
-            alert("Application button clicked for Ad #" + adNumber);
+            alert("Application button clicked for Funding Advert" + adNumber);
         });
     })(no);
 
