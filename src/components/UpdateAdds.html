@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Messages | Firebase</title>
-    
-    <link rel="stylesheet" href="../styles/adverts.css"/>
+    <title>Update Ad</title>
+    <link rel="stylesheet" href="../styles/updateAdds.css"/>
 </head>
-
 <body>
     <div class="container">
+        <h1>Update Funding Advert</h1> 
         <form action="" id="contactForm">
             <div class="alert">Your message sent</div>
 
@@ -48,27 +46,13 @@
                 <input type="file" id="Inpimg" />
             </div>
 
-            <a href="fundingManagerAdds.html">
-
             <div class="inputBox">
                 <button type="submit">Update</button>
             </div>
-        </a>
         </form>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
-    <script src="../javascript/updateAdds.js"></script>
-    
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1/firebase.js"></script>
+    <script src="../javascript/Adverts.js"></script>
 </body>
-
-<script type="text/javascript">
-    Inpimg.onchange = evt => {
-        const [file] = Inpimg.files
-        if (file) {
-            newimg.src = URL.createObjectURL(file)
-        }
-    }
-</script>
 </html>
