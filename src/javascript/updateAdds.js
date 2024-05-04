@@ -1,7 +1,5 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, remove, get, child, update } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
+// Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
     authDomain: "contact-form-6d16d.firebaseapp.com",
@@ -12,55 +10,87 @@ const firebaseConfig = {
     appId: "1:554996497997:web:78a40239df3b559caae604",
     measurementId: "G-N3J938V17H"
     };
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.database();
-
-window.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('contactForm');
-
-    // Extract ad ID from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const adId = urlParams.get('id');
-
-    // Fetch ad data from Firebase
-    const adRef = db.ref(`contactForm/${adId}`);
-    adRef.once('value', (snapshot) => {
-        const adData = snapshot.val();
-        if (adData) {
-            // Pre-fill form fields with ad data
-            document.getElementById('companyName').value = adData.companyName;
-            document.getElementById('companyEmail').value = adData.emailid;
-            document.getElementById('name').value = adData.name;
-            document.getElementById('msgContent').value = adData.msgContent;
-            document.getElementById('fundingType').value = adData.fundingType;
-            // You can handle image prefilling separately
-        }
-    });
-
-    // Handle form submission
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Get updated values from form fields
-        const updatedAd = {
-            companyName: document.getElementById('companyName').value,
-            emailid: document.getElementById('companyEmail').value,
-            name: document.getElementById('name').value,
-            msgContent: document.getElementById('msgContent').value,
-            fundingType: document.getElementById('fundingType').value,
-            // Add logic to handle image updating if necessary
-        };
-
-        // Update ad data in Firebase
-        db.ref(`contactForm/${adId}`).update(updatedAd)
-            .then(() => {
-                console.log("Ad updated successfully");
-                // Redirect to previous page or any other desired action
-            })
-            .catch((error) => {
-                console.error("Error updating ad: ", error);
-            });
-    });
-});
+          firebase.initializeApp(firebaseConfig);
+  
+          // Reference your database
+          var contactFormDB = firebase.database().ref("contactForm");
+  
+          document.getElementById("contactForm").addEventListener("submit", submitForm);
+  
+          function submitForm(e) {
+              e.preventDefault();
+              var name = getElementVal("name");
+              var companyName = getElementVal("companyName");
+              var emailid = getElementVal("companyEmail");
+              var msgContent = getElementVal("msgContent");
+              var Inpimg = document.getElementById("Inpimg").files[0];
+              var fundingType = getElementVal("fundingType");
+              var currentDate = getCurrentDate(); // Get current date
+              
+  
+              // Delete existing ad
+              const adId = getAdIdFromURL(); // Get ad ID from URL parameters
+              removeAdFromDatabase(adId); // Remove the existing ad from the database
+  
+              // Save the new ad
+              saveMessages(companyName, emailid, msgContent, Inpimg, name, fundingType, currentDate);
+  
+              // Enable alert
+              document.querySelector(".alert").style.display = "block";
+  
+              // Remove the alert
+              setTimeout(() => {
+                  document.querySelector(".alert").style.display = "none";
+              }, 3000);
+  
+              // Reset the form
+              document.getElementById("contactForm").reset();
+              window.location.href = "fundingManagerAdds.html";
+          }
+  
+          const saveMessages = (companyName, emailid, msgContent, Inpimg, name, fundingType, currentDate) => {
+              var newContactForm = contactFormDB.push();
+          
+              newContactForm.set({
+                  name: name,
+                  companyName: companyName,
+                  emailid: emailid,
+                  msgContent: msgContent,
+                  image: Inpimg.name,
+                  fundingType: fundingType, // Store funding type
+                  date: currentDate // Store current date
+              });
+          
+              // Upload image to Firebase storage
+              var storageRef = firebase.storage().ref("images/" + Inpimg.name);
+              storageRef.put(Inpimg);
+          };
+  
+          const getElementVal = (id) => {
+              return document.getElementById(id).value;
+          };
+          
+          const getCurrentDate = () => {
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+              var yyyy = today.getFullYear();
+          
+              return dd + '/' + mm + '/' + yyyy;
+          };
+  
+          function getAdIdFromURL() {
+              const urlParams = new URLSearchParams(window.location.search);
+              return urlParams.get('id');
+          }
+  
+          function removeAdFromDatabase(adKey) {
+              // Reference the specific ad in the database
+              const adRef = firebase.database().ref("contactForm/" + adKey);
+              // Remove the ad data from the database
+              adRef.remove().then(() => {
+                  console.log("Ad removed successfully");
+              }).catch((error) => {
+                  console.error("Error removing ad: ", error);
+              });
+          }
