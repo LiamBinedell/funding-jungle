@@ -23,16 +23,44 @@ const router = express.Router();
 
 async function getUnactivatedAccounts(){
     const collectionRef = firestore.collection(db, "users");
-    const q = firestore.query(collectionRef, firestore.where("role", "==", "fundingManager"), firestore.where("accountActivated", "==", false));
+    const q = firestore.query(collectionRef, firestore.where("accountActivated", "==", false));
 
     const docs = await firestore.getDocs(q);
 
-    return docs;
+    const unverifiedAccounts = docs.docs.map(doc => ({
+      name: doc.data().name + ' ' + doc.data().surname,
+      email: doc.data().email,
+      company: doc.data().company
+    }));
+    return unverifiedAccounts;
 }
 
-router.get('/', (req, res) => {
-    const docs = getUnactivatedAccounts();
-    res.status(200).json(docs);
+async function getDocByEmail(email){
+
+}
+
+async function deleteDeniedUserDoc(doc){
+
+}
+
+async function deleteDeniedUser(email){
+
+}
+
+router.get('/', async (req, res) => {
+    const unverifiedAccounts = await getUnactivatedAccounts();
+
+    res.status(200).json(unverifiedAccounts);
+});
+
+router.post('/approve', async (req, res) => {
+    const { email } = req.body;
+    res.status(200).send(`Approved ${email}`);
+});
+
+router.post('/deny', async (req, res) => {
+    const { email } = req.body;
+    res.status(200).send(`Denied ${email}`);
 });
 
 module.exports = router;

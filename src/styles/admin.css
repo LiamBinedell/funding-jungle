@@ -8,6 +8,31 @@ body {
     background-color: #89E0B7;
 }
 
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.managerContainer{
+    background-color: #568D73;
+
+    margin-top: 85px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 350px;
+    height: auto;
+
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .adContainer {
     background-color: #568D73;
 
@@ -36,7 +61,7 @@ ul {
 .listElement {
     border-style: double;
     border-radius: 1px;
-    width: 200px; /* Adjusted width */
+    width: auto; /* Adjusted width */
     margin-bottom: 10px; /* Add margin bottom to create space for the warning message */
     position: relative; /* Position relative for absolute positioning of warning message */
 
@@ -54,7 +79,7 @@ ul {
 button {
     background-color: #89E0B7;
     height: 40px;
-    width: 40px;
+    width: auto;
     border-radius: 4px;
 }
 

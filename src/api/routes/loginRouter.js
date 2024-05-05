@@ -28,17 +28,16 @@ async function checkIfAccountActivated(email){
 
     const docs = await firestore.getDocs(q);
 
-    if (docs.size > 0){
-        return false;
-    } else {
-        return true;
-    }
+    if (docs.docs.length > 0)
+        return docs.docs[0].data()["accountActivated"];
+    else return true;
 }
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const {email, pass} = req.body; 
 
-    if (!checkIfAccountActivated(email))
+    const verificationStatus = await checkIfAccountActivated(email);
+    if (!verificationStatus)
         res.status(401).send("Account pending verification. Please try again later");
     else{
         authorization.signInWithEmailAndPassword(auth, email, pass)
