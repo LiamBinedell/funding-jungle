@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 
 //import routers
-const {registerRouter, loginRouter, adminRouter, fundManagerRouter} = require('./api/routes/routerIndex');
+const {registerRouter, loginRouter, adminRouter} = require('./api/routes/routerIndex');
 
 const app = express();
 
