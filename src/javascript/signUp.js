@@ -111,8 +111,10 @@ document.addEventListener("DOMContentLoaded", () => {
         validateSurname(surnameInput.value, surnameInput);
         validateEmail(emailInput.value, emailInput);
         validatePass(passwordInput.value, passwordInput);
+        let company = "";
         if (companyInput){
             validateCompany(companyInput.value, companyInput);
+            company = companyInput.value;
         }
 
         if (allValid()){
@@ -127,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     email: emailInput.value,
                     password: passwordInput.value,
                     role: roleSelect.value,
-                    company: "",
+                    company: company,
                 })
             };
 

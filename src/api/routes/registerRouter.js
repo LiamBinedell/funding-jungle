@@ -31,21 +31,39 @@
             // Additional user data (name, surname, role) can be stored in Firebase database or other storage
             // For simplicity, let's just log the user data here
             const user = userCredential.user;
-            firestore.setDoc(firestore.doc(db, "users", user.uid), {
-                email: email,
-                name: name,
-                role: role,
-                surname: surname,
-                uid: user.uid
-            })
-            .then(() => {
-                console.log("User doc created");
-            })
-            .catch((error) => {
-                console.error("ERROR:",error);
-            })
-            console.log("User registered:", user.uid, name, surname, role);
-
+            if (role === "applicant"){
+                firestore.setDoc(firestore.doc(db, "users", user.uid), {
+                    email: email,
+                    name: name,
+                    role: role,
+                    surname: surname,
+                    uid: user.uid
+                })
+                .then(() => {
+                    console.log("User doc created");
+                })
+                .catch((error) => {
+                    console.error("ERROR:",error);
+                })
+                console.log("User registered:", user.uid, name, surname, role);
+            } else if (role === "fundingManager"){
+                firestore.setDoc(firestore.doc(db, "users", user.uid), {
+                    email: email,
+                    name: name,
+                    role: role,
+                    surname: surname,
+                    company: company,
+                    accountActivated: false,
+                    uid: user.uid
+                })
+                .then(() => {
+                    console.log("User doc created");
+                })
+                .catch((error) => {
+                    console.error("ERROR:",error);
+                })
+                console.log("User registered:", user.uid, name, surname, role);                
+            }
             // Send success response
             res.status(200).send(`Account created successfully, redirecting...`);
         })
