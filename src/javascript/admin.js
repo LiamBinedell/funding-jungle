@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(response => {
         console.log(response);
         const managerList = document.getElementById('managerList');
-        response.forEach((user, index) => {
+        response.forEach((user) => {
             const listElement = document.createElement('li');
             listElement.classList.add("listElement");
             
