@@ -63,14 +63,18 @@ async function getDocByEmail(email) {
 }
 
 
-async function deleteDeniedUserDoc(docID){
-  const docRef =  firestore.collection(db, "users").firestore.doc(docID);
- // await 
+async function deleteDeniedUserDoc(docID) {
+  try {
+    await firestore.deleteDoc(firestore.doc(db, "users", docID));
+  } catch (error) {
+    console.error('Error deleting document:', error);
+  }
 }
+
 
 async function deleteDeniedUser(email){
   const docID = await getDocByEmail(email);
-  console.log(typeof docID);
+  console.log(docID);
   deleteDeniedUserDoc(docID);
   admin.auth().deleteUser(docID)
   .then(() => {
@@ -89,13 +93,16 @@ router.get('/', async (req, res) => {
 
 router.post('/approve', async (req, res) => {
     const { email } = req.body;
-    const yes = getDocByEmail(email);
+    const docID = await getDocByEmail(email);
+    await firestore.updateDoc(firestore.doc(db, "users", docID), {
+      accountActivated: true
+    });
     res.status(200).send(`Approved ${email}`);
 });
 
 router.post('/deny', async (req, res) => {
     const { email } = req.body;
-    if (deleteDeniedUser(email))
+    if (await deleteDeniedUser(email))
       res.status(200).send(`Denied ${email}`);
     else 
       res.status(500).send(`Error deleting user`);
