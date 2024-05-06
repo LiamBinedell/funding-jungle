@@ -1,0 +1,39 @@
+>>>>Test Case: Applicant View Ads**
+
+**Descrition**
+Applicant users should be able to see ads that they can apply for.
+
+**Test steps**
+
+1. Log in as Applicant
+2. Click on 'Advertisements' in the sidebar.
+
+**Expected result**
+User should now be able to see a list of advertisements.
+
+>>>>Test Case: Applicant Apply to Ad**
+
+**Descrition**
+Applicant user should be able to apply to a advertisement for a funding opportunity.
+
+**Test steps**
+
+1. Log in as Applicant
+2. Click on 'Advertisements' in sidebar
+3. Select an advertisement for a funding opportunity
+
+**Expected result**
+User should recieve a notification that they are now applied to a funding opportunities.
+
+>>>>Test Case: Applicant View Pending**
+
+**Descrition**
+Applicant user should be able to see a list of pending applications
+
+**Test steps**
+
+1. Log in as Applicant
+2. Click on 'Applications' in sidebar
+
+**Expected result**
+User should now be looking at a list of their pending applications.
