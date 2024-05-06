@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -159,13 +160,13 @@
     applyButton.textContent = "Apply";
     applyButton.className = "apply-button";
 
-    // Capture the current value of 'no' in a closure
-    (function(adNumber) {
-        applyButton.addEventListener('click', () => {
-            // Handle application process
-            alert("Application button clicked for Funding Advert" + adNumber);
-        });
-    })(no);
+            // Capture the current value of 'no' in a closure
+            (function(adNumber) {
+                applyButton.addEventListener('click', () => {
+                    // Redirect to AdApplication.html page
+                    window.location.href = "AdApplication.html?id=" + adNumber;
+                });
+            })(no);
 
     adContainer.appendChild(adTitle);
     adContainer.appendChild(name);
