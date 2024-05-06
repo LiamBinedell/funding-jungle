@@ -19,12 +19,7 @@ const firebaseDB = firebaseApp.initializeApp(firebaseConfig);
 const db = firestore.getFirestore(firebaseDB);
 const auth = authorization.getAuth();
 
-const serviceAccount = require("../backend/fundingjungle-1f03d-firebase-adminsdk-ohbee-893fc1c340.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com"
-});
 
 const express = require('express');
 const router = express.Router();
