@@ -1,0 +1,13 @@
+Funding Manager
+
+>>>>>>>Manager should Login and View Applications
+
+Given a funding manager with a valid username and password, When the funding manager logs in to the system Then the manager should see a list of applications.
+
+>>>>>>>>Manager should be able to Approve Applications
+
+Given a funding manager has reviewed an application, When the funding manager clicks the "Approve" button Then the system should automatically send a notification to the applicant informing them of the approval.
+
+>>>>>>>>>>Manager should be able to Reject Applications
+
+Given a funding manager has reviewed an application, When the funding manager clicks the "Reject" button Then the system should automatically send a notification to the applicant informing them of the rejection and the reason.
