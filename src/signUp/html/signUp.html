@@ -1,1 +1,43 @@
 
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../css/signUp.css"/>
+        <script src="../javascript/signUp.js"></script>
+        <title>Sign Up</title>
+    </head>
+
+    <body>
+        <section class="signUpContainer">
+            <h1>Sign Up</h1>
+
+            <section class="inputContainer">
+                <input type="text" id="name" placeholder="Enter your first name"/>
+            </section>
+
+            <section class="inputContainer">
+                <input type="text" id="surname" placeholder="Enter your surname"/>
+            </section>
+
+            <section class="inputContainer">
+                <input type="email" id="emailAddress" placeholder="Enter your email"/>
+            </section>
+
+            <section class="inputContainer">
+                <input type="password" id="password" placeholder="Enter your password"/>
+            </section>
+
+            <section class="inputContainer" id="roleSelectContainer">
+                <select id="roleSelect">
+                    <option value="applicant">Applicant</option>
+                    <option value="fundingManager">Funding Manager</option>
+                </select>
+            </section>
+
+            <button id="btnSignUp" type="submit">Sign Up</button>
+            <p>Already have an account? <a href="../../login/html/login.html">Login</a></p>
+        </section>
+    </body>
+</html>
