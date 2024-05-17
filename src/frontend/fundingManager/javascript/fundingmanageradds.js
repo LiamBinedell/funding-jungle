@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, remove, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
@@ -11,14 +11,19 @@ const firebaseConfig = {
     messagingSenderId: "554996497997",
     appId: "1:554996497997:web:78a40239df3b559caae604",
     measurementId: "G-N3J938V17H"
-    };
+  };
+  
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase();
 
-let ads = document.getElementById('ads');
-let no = 1;
+let educationalAds = document.getElementById('educationalAds');
+let businessAds = document.getElementById('businessAds');
+let eventsAds = document.getElementById('eventsAds');
+let educationalNo = 1;
+let businessNo = 1;
+let eventsNo = 1;
 
 function Getads() {
     const dbref = ref(db);
@@ -28,7 +33,7 @@ function Getads() {
             adsSnapshot.forEach(adSnapshot => {
                 let adData = adSnapshot.val();
                 // Check if the ad was posted by the logged-in user
-                if (adData.emailid === loggedInEmail) {
+                if (adData.fundManagerEmail === loggedInEmail) {
                     AddadsAsListItem(adSnapshot);
                 }
             });
@@ -45,10 +50,10 @@ function AddadsAsListItem(adSnapshot) {
     adContainer.classList.add('ad-container');
 
     let adTitle = document.createElement('h3');
-    adTitle.textContent = "Ad #" + no;
+    adTitle.textContent = "Funding Advert ";
 
     let name = document.createElement('p');
-    name.textContent = "Name: " + adData.name;
+    name.textContent = "Names: " + adData.name;
 
     let company = document.createElement('p');
     company.textContent = "Company Name: " + adData.companyName;
@@ -57,7 +62,7 @@ function AddadsAsListItem(adSnapshot) {
     msg.textContent = "Description: " + adData.msgContent;
 
     let email = document.createElement('p');
-    email.textContent = "Email: " + adData.emailid;
+    email.textContent = "Company Email: " + adData.emailid;
 
     // Create an image element
     let image = document.createElement('img');
@@ -101,10 +106,27 @@ function AddadsAsListItem(adSnapshot) {
     adContainer.appendChild(editButton);
     adContainer.appendChild(deleteButton);
 
-    ads.appendChild(adContainer);
-    no++;
+    // Append the advert to the respective container based on its funding type
+    switch (adData.fundingType) {
+        case 'educational':
+            adTitle.textContent += educationalNo;
+            educationalAds.appendChild(adContainer);
+            educationalNo++;
+            break;
+        case 'business':
+            adTitle.textContent += businessNo;
+            businessAds.appendChild(adContainer);
+            businessNo++;
+            break;
+        case 'events':
+            adTitle.textContent += eventsNo;
+            eventsAds.appendChild(adContainer);
+            eventsNo++;
+            break;
+        default:
+            break;
+    }
 }
-
 
 function removeAdFromDatabase(adKey) {
     // Reference the specific ad in the database

@@ -12,6 +12,15 @@
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        
+        }
+
+        #ads-container {
+            max-width: 800px;
+            width: 100%;
         }
 
         h1 {
@@ -22,10 +31,12 @@
             font-size: 32px;
         }
 
-        #ads {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            color: #4CAF50ed;
+            font-size: 32px;
         }
 
         .ad-container {
@@ -33,10 +44,8 @@
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px;
+            margin: 20px auto;
             padding: 30px;
-            width: 70%;
-            max-width: 800px;
             transition: transform 0.3s ease;
         }
 
@@ -47,7 +56,7 @@
         .ad-container h3 {
             margin: 0;
             font-size: 24px;
-            color: #333;
+            color: #333333;
             margin-bottom: 20px;
         }
 
@@ -67,32 +76,53 @@
         }
 
         .ad-container button {
-    background-color: #4CAF50ed;
-    color: #fff;
-    border: none;
-    padding: 8px 16px; /* Adjusted padding */
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    margin-top: 20px;
-    margin-right: 10px; /* Added margin between buttons */
-    width: auto; /* Adjusted width */
-    transition: background-color 0.3s ease;
-}
-
+            background-color: #4CAF50ed;
+            color: #fff;
+            border: none;
+            padding: 8px 16px; /* Adjusted padding */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-right: 10px; /* Added margin between buttons */
+            width: auto; /* Adjusted width */
+            transition: background-color 0.3s ease;
+        }
 
         .ad-container button:hover {
             background-color: #4CAF50ed;
         }
+
+        /* Styles for the different groups of adverts */
+        .ad-group {
+            margin-top: 40px;
+        }
+
+        .ad-group h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>Available Funding Opportunities</h1>
-    <div id="ads"></div>
+    <div id="ads-container">
+        <h1>Available Funding Opportunities</h1>
+        <!-- Create separate containers for each group of adverts -->
+        <div id="educationalAds" class="ad-group">
+            <h2>Educational</h2>
+        </div>
+        <div id="businessAds" class="ad-group">
+            <h2>Business</h2>
+        </div>
+        <div id="eventsAds" class="ad-group">
+            <h2>Events</h2>
+        </div>
+    </div>
+
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
         import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -108,11 +138,14 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
 
         const db = getDatabase();
 
-        let ads = document.getElementById('ads');
+        // Get references to the containers for each group of adverts
+        let educationalAds = document.getElementById('educationalAds');
+        let businessAds = document.getElementById('businessAds');
+        let eventsAds = document.getElementById('eventsAds');
+
         let no = 1;
 
         function Getads() {
@@ -123,15 +156,40 @@
                 });
             });
         }
+        let educationalNo = 1;
+        let businessNo = 1;
+        let eventsNo = 1;
 
-        function AddadsAsListItem(adSnapshot) {
+    function AddadsAsListItem(adSnapshot) {
     let adData = adSnapshot.val();
+
+    let fundManagerEmail = adData.fundManagerEmail;
 
     let adContainer = document.createElement('div');
     adContainer.classList.add('ad-container');
 
     let adTitle = document.createElement('h3');
-    adTitle.textContent = "Funding Advert " + no;
+  adTitle.textContent = "Funding Advert ";
+
+  switch (adData.fundingType) {
+    case 'educational':
+      adTitle.textContent += educationalNo;
+      educationalAds.appendChild(adContainer);
+      educationalNo++;
+      break;
+    case 'business':
+      adTitle.textContent += businessNo;
+      businessAds.appendChild(adContainer);
+      businessNo++;
+      break;
+    case 'events':
+      adTitle.textContent += eventsNo;
+      eventsAds.appendChild(adContainer);
+      eventsNo++;
+      break;
+    default:
+      break;
+  }
 
     let name = document.createElement('p');
     name.textContent = "Name: " + adData.name;
@@ -160,13 +218,25 @@
     applyButton.textContent = "Apply";
     applyButton.className = "apply-button";
 
-            // Capture the current value of 'no' in a closure
-            (function(adNumber) {
-                applyButton.addEventListener('click', () => {
-                    // Redirect to AdApplication.html page
-                    window.location.href = "AdApplication.html?id=" + adNumber;
-                });
-            })(no);
+    // Capture the current value of 'no' in a closure
+    (function(adNumber, fundingType, fundManagerEmail) { // Pass fundManagerEmail to the closure
+    applyButton.addEventListener('click', () => {
+      // Redirect to the appropriate form page based on the funding type
+      switch (fundingType) {
+        case 'educational':
+          window.location.href = "EducationalForm.html?id=" + adNumber + "&fundManagerEmail=" + fundManagerEmail;
+          break;
+        case 'business':
+          window.location.href = "BusinessForm.html?id=" + adNumber + "&fundManagerEmail=" + fundManagerEmail;
+          break;
+        case 'events':
+          window.location.href = "EventsForm.html?id=" + adNumber + "&fundManagerEmail=" + fundManagerEmail;
+          break;
+        default:
+          break;
+      }
+    });
+  })(no, adData.fundingType, fundManagerEmail);
 
     adContainer.appendChild(adTitle);
     adContainer.appendChild(name);
@@ -178,7 +248,21 @@
     adContainer.appendChild(adType);
     adContainer.appendChild(applyButton);
 
-    ads.appendChild(adContainer);
+    // Append the ad container to the appropriate group based on the funding type
+    switch (adData.fundingType) {
+        case 'educational':
+            educationalAds.appendChild(adContainer);
+            break;
+        case 'business':
+            businessAds.appendChild(adContainer);
+            break;
+        case 'events':
+            eventsAds.appendChild(adContainer);
+            break;
+        default:
+            break;
+    }
+
     no++;
 }
 
