@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 data.text())
             .then(response => {
                 alert(response);
-                window.location.href = "../components/login.html";
+                window.location.href = "../login/html/login.html";
             })
             .catch(error => console.log("ERROR(FETCH):", error));
         }
