@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for funding</title>
+    
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+      }
+      .container {
+          max-width: 800px;
+          margin: 40px auto;
+          padding: 20px;
+          background-color: #f9f9f9;
+          border: 1px solid #ccc;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .inputBox {
+          margin-bottom: 20px;
+      }
+      label {
+          display: block;
+          margin-bottom: 10px;
+      }
+
+      input[type="text"], input[type="email"], input[type="value"], textarea {
+          width: 90%;
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #ccc;
+      }
+      textarea {
+          height: 150px;
+      }
+      button[type="submit"] {
+          background-color: #4CAF50;
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      button[type="submit"]:hover {
+          background-color: #3e8e41;
+      }
+      .alert {
+          background-color: #f44336;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+          display: none;
+      }
+  </style>
+</head>
+
+<body>
+    <div class="container">
+        <form action="" id="simpleform">
+            <div class="alert">Your message sent</div>
+
+            <div class="inputBox">
+                <label for="IDno">Id Number:</label>
+                <input type="value" id="IDno" placeholder="Id number" />
+            </div>
+            <div class="inputBox">
+                <label for="Email"> Email:</label>
+                <input type="Email" id="Email" placeholder=" Email" />
+            </div>
+
+            <div class="inputBox">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" placeholder="Your name" />
+            </div>
+            
+            <div class="inputBox">
+              <label for="address">Your Address:<Address></Address></label>
+              <input type="text" id="address" placeholder="Your Address"/>
+          </div>
+
+            <div class="inputBox">
+                <label for="msgContent"  >Message:</label>
+                <textarea id="msgContent" cols="30" rows="10" placeholder="Message" ></textarea>
+            </div>
+
+            <div class="inputBox">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="../javascript/AdApplication.js"></script>
+    
+
+</body>
+
+</html>
