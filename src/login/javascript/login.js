@@ -22,17 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
         switch (response){
           case "applicant":
             alert('Applicant successfully logged in');
-            window.location.href = "../components/applicant.html";
+            window.location.href = "../frontend/applicant/html/Applicant.html";
             break;
           case "fundingManager":
             alert('Funding manager successfully logged in');
             // Store email address in sessionStorage
             sessionStorage.setItem('loggedInFundingManager', emailInput.value);
-            window.location.href = "../components/fundingManager.html";
+            window.location.href = "../frontend/fundingManager/html/FundingManager.html";
             break;
           case "admin":
             alert('Admin successfully logged in');
-            window.location.href = "../components/adminDashboard.html";
+            window.location.href = "../frontend/admin/html/adminDashboard.html";
             break;
           default:
             alert(response);
