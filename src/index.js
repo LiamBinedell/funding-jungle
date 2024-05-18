@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 
 //import routers
-const {registerRouter, loginRouter, adminRouter} = require('./api/routes/routerIndex');
+const {registerRouter, loginRouter, adminRouter, applicantRouter, fundingManagerRouter} = require('./api/routes/routerIndex');
 
 const app = express();
 
@@ -17,6 +17,8 @@ app.use(cors());
 app.use('/api/register', registerRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/applicant', applicantRouter);
+app.use('/api/fundManager', fundingManagerRouter);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

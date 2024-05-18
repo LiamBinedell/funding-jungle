@@ -22,9 +22,9 @@ async function loadUserApplications(){
 
         listElement.innerHTML = `
             <section class="elementInfo">
-                <p>${user["name"]}</p>
-                <p>${user["email"]}</p>
-                <p>${user["company"]}</p>
+                <p>Name: ${user["name"]}</p>
+                <p>Email: ${user["email"]}</p>
+                <p>Company: ${user["company"]}</p>
             </section>
         `;
 
