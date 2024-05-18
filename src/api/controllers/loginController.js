@@ -58,4 +58,4 @@ const loginController = async (req, res) => {
     }
 };
 
-module.exports = {loginController};
+module.exports = {loginController, checkIfAccountActivated};
