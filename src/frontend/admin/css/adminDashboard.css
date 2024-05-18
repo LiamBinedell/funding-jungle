@@ -162,5 +162,31 @@ body {
 }
 
 .contentContainer {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+
+  align-items: center;
+}
+
+ul {
+  list-style: none;
+}
+
+.listElement {
+  width: 400px;
+  padding: 5px;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 1px;
+}
+
+.elementInfo {
+
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

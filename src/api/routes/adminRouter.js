@@ -62,7 +62,6 @@ async function getDocByEmail(email) {
   }
 }
 
-
 async function deleteDeniedUserDoc(docID) {
   try {
     await firestore.deleteDoc(firestore.doc(db, "users", docID));
@@ -70,7 +69,6 @@ async function deleteDeniedUserDoc(docID) {
     console.error('Error deleting document:', error);
   }
 }
-
 
 async function deleteDeniedUser(email){
   const docID = await getDocByEmail(email);
