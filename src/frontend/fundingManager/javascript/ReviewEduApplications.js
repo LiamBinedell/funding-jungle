@@ -18,13 +18,22 @@ const db = getDatabase();
 
 document.addEventListener("DOMContentLoaded", function () {
     const adsContainer = document.getElementById('form');
+    const approveButton = document.getElementById('approve-btn');
+    const declineButton = document.getElementById('decline-btn');
 
-    function getEducationalFormById(applicationId) {
-        const dbRef = ref(db, 'educationalform/' + applicationId);
-        return get(dbRef);
+    function getEducationalForms() {
+        const dbRef = ref(db);
+        get(child(dbRef, 'educationalform')).then((snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                if (data.applicationId === sessionStorage.getItem('applicationId')) {
+                    addFormAsListItem(data);
+                }
+            });
+        });
     }
 
-    function displayForm(data) {
+    function addFormAsListItem(data) {
         const ul = document.createElement('ul');
 
         const firstName = document.createElement('li');
@@ -67,27 +76,51 @@ document.addEventListener("DOMContentLoaded", function () {
         course.textContent = "Course: " + data.course;
         ul.appendChild(course);
 
+        const year = document.createElement('li');
+        year.textContent = "Year Of Study: " + data.year;
+        ul.appendChild(year);
+
         const grades = document.createElement('li');
-        grades.textContent = "Grades: " + data.grades;
+        grades.textContent = "Last Final Grades: " + data.grades;
         ul.appendChild(grades);
+
+        const reason = document.createElement('li');
+        reason.textContent = "Motivation Why We Should Award Applicant This Funding: " + data.reason;
+        ul.appendChild(reason);
+
+        const community = document.createElement('li');
+        community.textContent = "How Will The Applicant Give Back To The Community: " + data.community;
+        ul.appendChild(community);
+
+        const idDocument = document.createElement('li');
+        idDocument.textContent = "Applicant Certified ID Document: " + data.idDocument;
+        ul.appendChild(idDocument);
+
+        const parentId = document.createElement('li');
+        parentId.textContent = "Certified Parent/Guardian ID Document: " + data.parentId;
+        ul.appendChild(parentId);
+
+        const results = document.createElement('li');
+        results.textContent = "Academic Results/Transcript: " + data.results;
+        ul.appendChild(results);
+
+        const incomeProof = document.createElement('li');
+        incomeProof.textContent = "Proof Of Household Income: " + data.incomeProof;
+        ul.appendChild(incomeProof);
+
 
         adsContainer.appendChild(ul);
     }
 
-    const applicationId = sessionStorage.getItem('applicationId');
+    getEducationalForms();
 
-    if (applicationId) {
-        getEducationalFormById(applicationId).then((snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                displayForm(data);
-            } else {
-                console.log("No data available for the provided applicationId.");
-            }
-        }).catch((error) => {
-            console.error("Error fetching form data:", error);
-        });
-    } else {
-        console.log("No applicationId found in sessionStorage.");
-    }
+    // Approve Button Click Event
+    approveButton.addEventListener('click', () => {
+        window.location.href = "EducReviewForm.html";
+    });
+
+    // Decline Button Click Event
+    declineButton.addEventListener('click', () => {
+        window.location.href = "EducReviewForm.html";
+    });
 });

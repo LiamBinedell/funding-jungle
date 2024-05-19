@@ -35,9 +35,11 @@ const firebaseConfig = {
     var reason = getElementVal("reason");
     var applicationId = generateUniqueId(); // Generate a unique application ID
     var fundManagerEmail = new URLSearchParams(window.location.search).get('fundManagerEmail'); // Retrieve the funding manager's email from the URL parameter
+    var applicantEmail = sessionStorage.getItem('loggedInApplicant');
+
     var idDocument = document.getElementById("idDocument").files[0].name;
     var poster = document.getElementById("parentId").files[0].name;
-    saveApplication(applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, phone, address1, location, attendance, budget, description, reason, idDocument, poster);
+    saveApplication(applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, applicantEmail, phone, address1, location, attendance, budget, description, reason, idDocument, poster);
   
   // Display success message
   const alertMessage = document.querySelector(".alert");
@@ -53,7 +55,7 @@ const firebaseConfig = {
   document.getElementById("eventsForm").reset();
 }
   
-  const saveApplication = (applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, phone, address1, location, attendance, budget, description, reason, idDocument, poster) => {
+  const saveApplication = (applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, applicantEmail, phone, address1, location, attendance, budget, description, reason, idDocument, poster) => {
     var newApplication = FormDB.push();
   
     newApplication.set({
@@ -65,6 +67,7 @@ const firebaseConfig = {
       gender: gender,
       email: email,
       fundManagerEmail: fundManagerEmail,
+      applicantEmail: applicantEmail,
       phone: phone,
       address1: address1,
       location: location,

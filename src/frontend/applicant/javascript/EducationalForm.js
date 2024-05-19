@@ -33,12 +33,14 @@ function submitForm(e) {
   var reason = getElementVal("reason");
   var community = getElementVal("community");
   var fundManagerEmail = new URLSearchParams(window.location.search).get('fundManagerEmail'); // Retrieve the funding manager's email from the URL parameter
+  var applicantEmail = sessionStorage.getItem('loggedInApplicant');
+
   var idDocument = document.getElementById("idDocument").files[0].name;
   var parentId = document.getElementById("parentId").files[0].name;
   var incomeProof = document.getElementById("incomeProof").files[0].name;
   var results = document.getElementById("results").files[0].name;
   var applicationId = generateUniqueId(); // Generate a unique application ID
-  saveApplication(applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, phone, address1, institution, course, year, grades, reason, community, idDocument, parentId, incomeProof, results);
+  saveApplication(applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, applicantEmail, phone, address1, institution, course, year, grades, reason, community, idDocument, parentId, incomeProof, results);
 
   // Display success message
   const alertMessage = document.querySelector(".alert");
@@ -54,7 +56,7 @@ function submitForm(e) {
   document.getElementById("bursaryForm").reset();
 }
 
-const saveApplication = (applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, phone, address1, institution, course, year, grades, reason, community, idDocument, parentId, incomeProof, results) => {
+const saveApplication = (applicationId, firstName, lastName, idNumber, dob, gender, email, fundManagerEmail, applicantEmail, phone, address1, institution, course, year, grades, reason, community, idDocument, parentId, incomeProof, results) => {
   var newApplication = FormDB.push();
 
   newApplication.set({
@@ -66,6 +68,7 @@ const saveApplication = (applicationId, firstName, lastName, idNumber, dob, gend
     gender: gender,
     email: email,
     fundManagerEmail: fundManagerEmail,
+    applicantEmail: applicantEmail,
     phone: phone,
     address1: address1,
     institution: institution,

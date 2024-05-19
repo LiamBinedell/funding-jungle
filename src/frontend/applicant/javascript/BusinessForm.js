@@ -32,10 +32,12 @@ function submitForm(e) {
     var community = getElementVal("community");
     var applicationId = generateUniqueId(); // Generate a unique application ID
     var fundManagerEmail = new URLSearchParams(window.location.search).get('fundManagerEmail'); // Retrieve the funding manager's email from the URL parameter
+    var applicantEmail = sessionStorage.getItem('loggedInApplicant');
+
     var idDocument = document.getElementById("idDocument").files[0].name;
     var businessPlan = document.getElementById("businessPlan").files[0].name;
 
-    saveApplication(applicationId, firstName, lastName, idNumber, businessName, registrationNumber, businessAddress, businessType, email,fundManagerEmail, phone, reason, community, idDocument, businessPlan);
+    saveApplication(applicationId, firstName, lastName, idNumber, businessName, registrationNumber, businessAddress, businessType, email,fundManagerEmail, applicantEmail, phone, reason, community, idDocument, businessPlan);
 
   // Display success message
   const alertMessage = document.querySelector(".alert");
@@ -52,7 +54,7 @@ function submitForm(e) {
 }
   
 
-const saveApplication = (applicationId, firstName, lastName, idNumber, businessName, registrationNumber, businessAddress, businessType, email, fundManagerEmail, phone, reason, community, idDocument, businessPlan) => {
+const saveApplication = (applicationId, firstName, lastName, idNumber, businessName, registrationNumber, businessAddress, businessType, email, fundManagerEmail, applicantEmail, phone, reason, community, idDocument, businessPlan) => {
     var newApplication = FormDB.push();
 
     newApplication.set({
@@ -66,6 +68,7 @@ const saveApplication = (applicationId, firstName, lastName, idNumber, businessN
         businessType: businessType,
         email: email,
         fundManagerEmail: fundManagerEmail,
+        applicantEmail: applicantEmail,
         phone: phone,
         reason: reason,
         community: community,
