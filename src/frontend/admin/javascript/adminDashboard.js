@@ -91,11 +91,18 @@ async function loadUserApplications(){
 }
 
 async function loadFundingAdverts(){
+    clearDOM();
+    const data = await fetch('/api/admin/ads');
+    const ads = data.json();
 
+    console.log(ads);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const fundingAds = document.getElementById('fundingAds');
     const userApplications = document.getElementById('userApplications');
+
+    fundingAds.addEventListener('click', loadFundingAdverts)
 
     userApplications.addEventListener('click', loadUserApplications);
 });
