@@ -71,7 +71,7 @@ async function deleteDeniedUser(email){
   const docID = await getDocByEmail(email);
   console.log(docID);
   deleteDeniedUserDoc(docID);
-  admin.auth().deleteUser(docID)
+  const result = await admin.auth().deleteUser(docID)
   .then(() => {
     return true
   })
@@ -79,6 +79,8 @@ async function deleteDeniedUser(email){
     console.error("ERROR:", error);
     return false;
   })
+
+  return result;
 }
 
 const getUnactivatedController = async (req, res) => {
@@ -97,7 +99,9 @@ const approveUserController = async (req, res) => {
 
 const denyUserController = async (req, res) => {
     const { email } = req.body;
-    if (await deleteDeniedUser(email))
+    const status = await deleteDeniedUser(email);
+    console.log(status)
+    if (status)
       res.status(200).send(`Denied ${email}`);
     else 
       res.status(500).send(`Error deleting user`);

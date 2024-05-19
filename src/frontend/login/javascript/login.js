@@ -21,7 +21,7 @@ async function login(emailAddr, password){
     case "fundingManager":
       alert('Funding manager successfully logged in');
       // Store email address in sessionStorage
-      sessionStorage.setItem('loggedInFundingManager', emailInput.value);
+      sessionStorage.setItem('loggedInFundingManager', emailAddr);
       window.location.href = "../../fundingManager/html/FundingManager.html";
       break;
     case "admin":
