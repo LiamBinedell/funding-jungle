@@ -2,7 +2,6 @@ const request = require('supertest');
 const express = require('express');
 const { registerController } = require('./registerController'); // Adjust the path to your controller file
 const { auth, db } = require('../../firebaseConfig'); // Adjust the path to your Firebase configuration file
-const { authorization, firestore } = require('firebase-admin'); // or appropriate Firebase modules
 
 jest.mock('../../firebaseConfig', () => ({
     auth: {
