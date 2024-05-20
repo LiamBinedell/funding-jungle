@@ -11,13 +11,13 @@ async function Getads() {
         const postOptions = {
             method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 email: loggedInEmail
             })
         }
-        
+
         try {
             const data = await fetch('/api/fundManager/ads', postOptions);
             const response = await data.json();

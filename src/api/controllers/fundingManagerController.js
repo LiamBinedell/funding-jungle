@@ -1,19 +1,3 @@
-// const {db, storage} = require('../databases/contact-form');
-// const {ref, set, push, remove, get, child} = require('firebase/database');
-// const fbStorage = require('firebase/storage');
-
-// async function uploadImage(Inpimg){
-//     const imageRef = fbStorage.ref(storage, 'images/' + Inpimg.name);
-
-//     try {
-//         const snapshot = await fbStorage.uploadBytes(imageRef, Inpimg);
-//         return true;
-//     } catch (e) {
-//         console.error("ERROR:", e);
-//         return false;
-//     }
-// }
-
 const authorization = require('firebase/auth');
 const firebaseApp = require('firebase/app');
 const firestore = require('firebase/firestore');

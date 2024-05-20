@@ -5,31 +5,17 @@ let eventsAds = document.getElementById('eventsAds');
 let no = 1;
 
 async function Getads() {
-  const loggedInEmail = sessionStorage.getItem('loggedInFundingManager');
-  if (loggedInEmail) {
-      const postOptions = {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              email: loggedInEmail
-          })
-      }
-      
-      try {
-          const data = await fetch('/api/fundManager/ads', postOptions);
-          const response = await data.json();
-          console.log(response);
-          response.forEach(ad => {
-              AddadsAsListItem(ad);
-          });
-      } catch (e) {
-          console.error("ERROR:", e)
-      }
-  } else {
-      console.log("No user logged in");
+  try {
+    const data = await fetch('/api/applicant/ads');
+    const response = await data.json();
+    console.log(response);
+    response.forEach(ad => {
+      AddadsAsListItem(ad);
+    });
+  } catch (e) {
+    console.error("ERROR:", e)
   }
+
 }
 
 let educationalNo = 1;

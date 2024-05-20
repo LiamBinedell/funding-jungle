@@ -1,7 +1,3 @@
-const { db } = require('../databases/contact-form')
-const {ref, get, child} = require('firebase/database');
-
-
 const getAdsController = async (req, res) => {
     const dbref = ref(db);
 
