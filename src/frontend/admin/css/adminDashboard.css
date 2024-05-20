@@ -1,0 +1,216 @@
+/* =========== Google Fonts ============ */
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
+
+/* =============== Globals ============== */
+* {
+  font-family: "Ubuntu", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --blue: #4CAF50ed;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --black1: #222;
+  --black2: #999;
+}
+
+.logo {
+  margin-bottom: 1rem;
+  display: flex; /* added */
+  align-items: center; /* added */
+
+  img {
+    width: 3rem;
+    border-radius: 50%;
+  }
+
+  .text {
+    font-size: 3rem; /* added */
+    margin-left: 0.5rem; /* added */
+    color: #fff;
+  }
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+/* =============== Navigation ================ */
+.navigation {
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  background: var(--blue);
+  border-left: 10px solid var(--blue);
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+.navigation.active {
+  width: 80px;
+}
+
+.navigation ul {
+  padding-top: 15px;
+  padding-right: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.navigation ul li {
+  position: relative;
+  width: 100%;
+  list-style: none;
+  border-radius: 30px;
+}
+
+.navigation ul li:hover,
+.navigation ul li.hovered {
+  background-color: var(--white);
+}
+
+.navigation ul li:nth-child(1) {
+  margin-bottom: 40px;
+  pointer-events: none;
+}
+
+.navigation ul li a {
+  position: relative;
+  display: block;
+  width: 100%;
+  display: flex;
+  text-decoration: none;
+  color: var(--white);
+}
+.navigation ul li:hover a,
+.navigation ul li.hovered a {
+  color: var(--blue);
+}
+
+.navigation ul li a .icon {
+  position: relative;
+  display: block;
+  min-width: 60px;
+  height: 60px;
+  line-height: 75px;
+  text-align: center;
+}
+.navigation ul li a .icon ion-icon {
+  font-size: 1.75rem;
+}
+
+.navigation ul li a .title {
+  position: relative;
+  display: block;
+  padding: 0 10px;
+  height: 60px;
+  line-height: 60px;
+  text-align: start;
+  white-space: nowrap;
+}
+
+.logo {
+  margin-bottom: 1rem;
+  display: flex; /* added */
+  align-items: center; /* added */
+
+  img {
+    width: 3rem;
+    border-radius: 50%;
+  }
+
+  .text {
+    font-size: 1.5rem; /* added */
+    margin-left: 0.5rem; /* added */
+  }
+}
+
+/* --------- curve outside ---------- */
+
+/* ===================== Main ===================== */
+.main {
+  position: absolute;
+  padding-left: 15px;
+  width: calc(100% - 300px);
+  left: 300px;
+  min-height: 100vh;
+  background: var(--white);
+  transition: 0.5s;
+}
+.main.active {
+  width: calc(100% - 80px);
+  left: 80px;
+}
+
+.topbar {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  align-items: center;
+}
+
+ul {
+  list-style: none;
+}
+
+.listElement {
+  width: 400px;
+  padding: 5px;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 1px;
+  margin-bottom: 20px;
+
+  background: var(--blue);
+}
+
+.elementInfo {
+  margin-bottom: 5px;
+}
+.elementInfo p {
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  padding: 5px;
+}
+
+.buttonContainer button {
+  width: 70px;
+  height: 30px;
+  border-style: solid;
+  border-width: 0px;
+  border-radius: 30px;
+
+  background: var(--blue);
+}
+
+.buttonContainer button:hover,
+.buttonContainer button.hovered {
+  background-color: var(--white);
+}

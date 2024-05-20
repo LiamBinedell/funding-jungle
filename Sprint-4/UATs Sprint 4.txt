@@ -1,0 +1,75 @@
+>>>> Test Case - Admin Delete Advert
+A unique identifier or a descriptive name that's easy to come back to.
+
+**Descrition**
+Admin should be able to delete funding adverts posted by Funding Managers.
+
+**Test steps**
+Keep it brief but make it clear what the end goal is.
+
+1. Log in as Admin
+2. Navigate to Adverts
+3. Select an advert.
+4. Select "Delete Advert."
+
+**Expected result**
+Funding Advert should now be removed from the platform.
+
+>>>> Test Case - Applicant Track Status
+
+**Descrition**
+Applicant should be able to track the status of applications.
+
+**Test steps**
+Keep it brief but make it clear what the end goal is.
+
+1. Log in as Applicant
+2. Navigate to pending applications
+3. Select application
+
+**Expected result**
+Applicant should now be able to see the status of their application.
+
+>>>> Test Case - Applicant view notifications**
+
+**Descrition**
+Applicant should be able to view notifications sent by the funding manager
+
+**Test steps**
+Keep it brief but make it clear what the end goal is.
+
+1. Log in as Applicant
+2. Navigate to notifications
+
+**Expected result**
+Applicant should now see a list of notifications
+
+>>>> Test Case - Fund Manager Send Notification**
+
+**Descrition**
+Funding Manager, should be able send notifications to applicants about the status of their application.
+
+**Test steps**
+Keep it brief but make it clear what the end goal is.
+
+1. Log In as Funding Manager
+2. Navigate to Pending Applications
+3. Select an advert.
+4. Select a notification option.
+
+**Expected result**
+Notification should now be sent to applicant.
+
+>>>> Test Case - Fund Manager Track Budget**
+
+**Descrition**
+Funding Manager, should be able to track budget allocations.
+
+**Test steps**
+Keep it brief but make it clear what the end goal is.
+
+1. Log In as Funding Manager
+2. Navigate to Budget
+
+**Expected result**
+Funding Manager should now be able to see the allocation of their budget.
