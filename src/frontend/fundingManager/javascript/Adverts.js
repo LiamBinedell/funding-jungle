@@ -1,6 +1,3 @@
-// Reference your database
-  var contactFormDB = firebase.database().ref("contactForm");
-  
   document.getElementById("contactForm").addEventListener("submit", submitForm);
   
   function submitForm(e) {
