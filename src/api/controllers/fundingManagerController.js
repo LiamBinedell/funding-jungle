@@ -1,6 +1,10 @@
 const {db} = require('../databases/contact-form');
 const {ref, set, push} = require('firebase/database');
-const {} = require('firebase/storage');
+const storage = require('firebase/storage');
+
+async function uploadImage(Inpimg){
+    const storageRef = storage.ref()
+}
 
 const createAdController = async (req,res) => {
     const dbref = ref(db);

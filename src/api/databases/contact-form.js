@@ -2,6 +2,7 @@
 const { initializeApp, getApps, getApp } = require('firebase/app');
 const { getDatabase } = require('firebase/database');
 const { getAuth } = require('firebase/auth');
+const { getStorage } = require('firebase/storage');
 
 const firebaseConfig = {
     apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
@@ -23,5 +24,6 @@ if (!getApps().length) {
 
 const db = getDatabase(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
-module.exports = { db, auth };
+module.exports = { db, auth, storage };
