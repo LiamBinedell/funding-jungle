@@ -49,6 +49,8 @@
   
     try {
       const data = await fetch('/api/fundManager/create', postOptions);
+      const response = await data.text();
+      alert(response);
     } catch (e) {
       console.error("ERROR:", e)
     }

@@ -47,23 +47,32 @@ function submitForm(e) {
     window.location.href = "fundingManagerAdds.html";
 }
 
-const saveMessages = (companyName, emailid, msgContent, Inpimg, name, fundingType, currentDate) => {
-    var newContactForm = contactFormDB.push();
-
-    newContactForm.set({
+async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate) {
+    const postOptions = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
         name: name,
         companyName: companyName,
         emailid: emailid,
+        fundManagerEmail : fundManagerEmail,
         msgContent: msgContent,
         image: Inpimg.name,
         fundingType: fundingType, // Store funding type
         date: currentDate // Store current date
-    });
-
-    // Upload image to Firebase storage
-    var storageRef = firebase.storage().ref("images/" + Inpimg.name);
-    storageRef.put(Inpimg);
-};
+      })
+    }
+  
+    try {
+      const data = await fetch('/api/fundManager/create', postOptions);
+      const response = data.text();
+      alert(response);
+    } catch (e) {
+      console.error("ERROR:", e)
+    }
+  };
 
 const getElementVal = (id) => {
     return document.getElementById(id).value;
@@ -83,15 +92,23 @@ function getAdIdFromURL() {
     return urlParams.get('id');
 }
 
-function removeAdFromDatabase(adKey) {
-    // Reference the specific ad in the database
-    const adRef = firebase.database().ref("contactForm/" + adKey);
-    // Remove the ad data from the database
-    adRef.remove().then(() => {
-        console.log("Ad removed successfully");
-    }).catch((error) => {
-        console.error("Error removing ad: ", error);
-    });
+async function removeAdFromDatabase(adKey) {
+    const postOptions = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            key: adKey
+        })
+    };
+
+    try {
+        const data = await fetch('/api/fundManager/delete', postOptions);
+        const response = await data.text();
+    } catch (e) {
+        console.error("ERROR:", e);
+    }
 }
 
 function previewImage(event) {

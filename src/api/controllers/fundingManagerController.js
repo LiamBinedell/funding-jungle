@@ -1,5 +1,5 @@
 const {db, storage} = require('../databases/contact-form');
-const {ref, set, push} = require('firebase/database');
+const {ref, set, push, remove} = require('firebase/database');
 const fbStorage = require('firebase/storage');
 
 async function uploadImage(Inpimg){
@@ -42,4 +42,17 @@ const createAdController = async (req,res) => {
     }
 };
 
-module.exports = {createAdController};
+const deleteAdController = async (req, res) => {
+    const { key } = req.body;
+    const adRef = ref(db, 'contactForm/' + key);
+
+    try {
+        await remove(adRef);
+        res.status(200).send(true);
+    } catch (e) {
+        console.error("ERROR:", e);
+        res.status(500).send("Error deleting ad");
+    }
+}
+
+module.exports = {createAdController, deleteAdController};
