@@ -29,23 +29,31 @@
     document.getElementById("contactForm").reset();
   }
   
-  const saveMessages = (companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate) => {
+  async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate) {
     var newContactForm = contactFormDB.push();
   
-    newContactForm.set({
-      name: name,
-      companyName: companyName,
-      emailid: emailid,
-      fundManagerEmail : fundManagerEmail,
-      msgContent: msgContent,
-      image: Inpimg.name,
-      fundingType: fundingType, // Store funding type
-      date: currentDate // Store current date
-    });
+    const postOptions = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        companyName: companyName,
+        emailid: emailid,
+        fundManagerEmail : fundManagerEmail,
+        msgContent: msgContent,
+        image: Inpimg.name,
+        fundingType: fundingType, // Store funding type
+        date: currentDate // Store current date
+      })
+    }
   
-    // Upload image to Firebase storage
-    var storageRef = firebase.storage().ref("images/" + Inpimg.name);
-    storageRef.put(Inpimg);
+    try {
+      const data = await fetch('/api/fundManager/create', postOptions);
+    } catch (e) {
+      console.error("ERROR:", e)
+    }
   };
   
   const getElementVal = (id) => {

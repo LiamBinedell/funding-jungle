@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {someFundFunctionController} = require('../controllers/fundingManagerController');
+const {createAdController} = require('../controllers/fundingManagerController');
 
 // fetch('/api/fundManager/'); should activate 'someFundFunctionController'
-router.get('/create', async (req, res) => {
-    
-});
+router.get('/create', createAdController);
 
 module.exports = router;
