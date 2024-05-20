@@ -1,47 +1,76 @@
-const {db, storage} = require('../databases/contact-form');
-const {ref, set, push, remove} = require('firebase/database');
-const fbStorage = require('firebase/storage');
+// const {db, storage} = require('../databases/contact-form');
+// const {ref, set, push, remove, get, child} = require('firebase/database');
+// const fbStorage = require('firebase/storage');
 
-async function uploadImage(Inpimg){
-    const imageRef = fbStorage.ref(storage, 'images/' + Inpimg.name);
+// async function uploadImage(Inpimg){
+//     const imageRef = fbStorage.ref(storage, 'images/' + Inpimg.name);
 
-    try {
-        const snapshot = await fbStorage.uploadBytes(imageRef, Inpimg);
-        return true;
-    } catch (e) {
-        console.error("ERROR:", e);
-        return false;
-    }
-}
+//     try {
+//         const snapshot = await fbStorage.uploadBytes(imageRef, Inpimg);
+//         return true;
+//     } catch (e) {
+//         console.error("ERROR:", e);
+//         return false;
+//     }
+// }
+
+const authorization = require('firebase/auth');
+const firebaseApp = require('firebase/app');
+const firestore = require('firebase/firestore');
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB1bLJJAlJWzwcg4Dvku1KZM3cgR4TbONM",
+  authDomain: "fundingjungle-1f03d.firebaseapp.com",
+  databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com",
+  projectId: "fundingjungle-1f03d",
+  storageBucket: "fundingjungle-1f03d.appspot.com",
+  messagingSenderId: "642664605739",
+  appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
+  measurementId: "G-Q92887FDM2"
+};
+
+// Initialize Firebase
+const firebaseDB = firebaseApp.initializeApp(firebaseConfig);
+const db = firestore.getFirestore(firebaseDB);
+const auth = authorization.getAuth();
+
+const getCurrentDate = () => {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const yyyy = today.getFullYear();
+  
+    return dd + '/' + mm + '/' + yyyy;
+  };
 
 const getAdsController = async (req, res) => {
     const {email} = req.body;
 
-    const dbref = ref(db);
+    const collectionRef = firestore.collection(db, 'adverts');
+    const q = firestore.query(collectionRef, firestore.where("fundManagerEmail", "==", email));
 
     try {
-        const adsSnapshot = await get(child(dbref, 'contact-form'));
-
-        const ads = [];
-        adsSnapshot.forEach(adSnap => {
-            const ad = adSnap.val();
-            if (ad['fundManagerEmail'] === email){
-                ads.push(ad);
-            }
-        });
-
-        res.status(200).json(ads);
+        const docs = await firestore.getDocs(q);
+    
+        // Extract data from the docs array and construct a new array of ads
+        const ads = docs.docs.map(doc => ({
+            id: doc.id,
+            data: doc.data()
+        }));
+    
+        console.log(ads);
+        res.status(200).json(ads); // Return the array of ads as JSON
     } catch (e) {
-        console.error("ERROR", e);
-        res.status(500).send(e);
+        console.error("ERROR:", e);
+        res.status(500).send("Error fetching ads");
     }
+    
 };
 
 const createAdController = async (req,res) => {
-    const dbref = ref(db);
-    const newAdRef = push(dbref);
+    const {companyName, fundManagerEmail, emailid, msgContent, name, fundingType} = req.body;
 
-    const {companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate} = req.body;
+    const currentDate = getCurrentDate();
 
     const newAd = {
         name: name,
@@ -49,14 +78,12 @@ const createAdController = async (req,res) => {
         emailid: emailid,
         fundManagerEmail : fundManagerEmail,
         msgContent: msgContent,
-        image: Inpimg.name,
         fundingType: fundingType, // Store funding type
-        date: currentDate // Store current date
+        date: currentDate.toString() // Store current date
     }
 
     try {
-        await set(newAdRef, newAd);
-        //await uploadImage(Inpimg);
+        await firestore.setDoc(firestore.doc(firestore.collection(db, 'adverts')), newAd);
 
         res.status(200).send('Ad created successfully');
     } catch (e) {
@@ -67,14 +94,15 @@ const createAdController = async (req,res) => {
 
 const deleteAdController = async (req, res) => {
     const { key } = req.body;
-    const adRef = ref(db, 'contactForm/' + key);
+
+    const adRef = firestore.doc(db, 'adverts', key); // Assuming 'adverts' is your collection name
 
     try {
-        await remove(adRef);
-        res.status(200).send(true);
+        await firestore.deleteDoc(adRef);
+        res.status(200).send("Document deleted successfully");
     } catch (e) {
         console.error("ERROR:", e);
-        res.status(500).send("Error deleting ad");
+        res.status(500).send("Error deleting document");
     }
 };
 

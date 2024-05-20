@@ -1,20 +1,3 @@
-
-// Initialize Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
-    authDomain: "contact-form-6d16d.firebaseapp.com",
-    databaseURL: "https://contact-form-6d16d-default-rtdb.firebaseio.com",
-    projectId: "contact-form-6d16d",
-    storageBucket: "contact-form-6d16d.appspot.com",
-    messagingSenderId: "554996497997",
-    appId: "1:554996497997:web:78a40239df3b559caae604",
-    measurementId: "G-N3J938V17H"
-    };
-firebase.initializeApp(firebaseConfig);
-
-// Reference your database
-var contactFormDB = firebase.database().ref("contactForm");
-
 document.getElementById("contactForm").addEventListener("submit", submitForm);
 
 function submitForm(e) {
@@ -23,16 +6,14 @@ function submitForm(e) {
     var companyName = getElementVal("companyName");
     var emailid = getElementVal("companyEmail");
     var msgContent = getElementVal("msgContent");
-    var Inpimg = document.getElementById("Inpimg").files[0];
     var fundingType = getElementVal("fundingType");
-    var currentDate = getCurrentDate(); // Get current date
 
     // Delete existing ad
     const adId = getAdIdFromURL(); // Get ad ID from URL parameters
     removeAdFromDatabase(adId); // Remove the existing ad from the database
 
     // Save the new ad
-    saveMessages(companyName, emailid, msgContent, Inpimg, name, fundingType, currentDate);
+    saveMessages(companyName, emailid, msgContent, Inpimg, name, fundingType);
 
     // Enable alert
     document.querySelector(".alert").style.display = "block";
@@ -47,7 +28,7 @@ function submitForm(e) {
     window.location.href = "fundingManagerAdds.html";
 }
 
-async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate) {
+async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, name, fundingType) {
     const postOptions = {
       method: "POST",
       headers: {
@@ -59,9 +40,7 @@ async function saveMessages (companyName, fundManagerEmail, emailid, msgContent,
         emailid: emailid,
         fundManagerEmail : fundManagerEmail,
         msgContent: msgContent,
-        image: Inpimg.name,
         fundingType: fundingType, // Store funding type
-        date: currentDate // Store current date
       })
     }
   
@@ -76,15 +55,6 @@ async function saveMessages (companyName, fundManagerEmail, emailid, msgContent,
 
 const getElementVal = (id) => {
     return document.getElementById(id).value;
-};
-
-const getCurrentDate = () => {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-    var yyyy = today.getFullYear();
-
-    return dd + '/' + mm + '/' + yyyy;
 };
 
 function getAdIdFromURL() {
@@ -109,9 +79,4 @@ async function removeAdFromDatabase(adKey) {
     } catch (e) {
         console.error("ERROR:", e);
     }
-}
-
-function previewImage(event) {
-    var img = document.getElementById('newimg');
-    img.src = URL.createObjectURL(event.target.files[0]);
 }

@@ -1,22 +1,22 @@
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+        // // Import the functions you need from the SDKs you need
+        // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        // import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
-            authDomain: "contact-form-6d16d.firebaseapp.com",
-            databaseURL: "https://contact-form-6d16d-default-rtdb.firebaseio.com",
-            projectId: "contact-form-6d16d",
-            storageBucket: "contact-form-6d16d.appspot.com",
-            messagingSenderId: "554996497997",
-            appId: "1:554996497997:web:78a40239df3b559caae604",
-            measurementId: "G-N3J938V17H"
-        };
+        // const firebaseConfig = {
+        //     apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
+        //     authDomain: "contact-form-6d16d.firebaseapp.com",
+        //     databaseURL: "https://contact-form-6d16d-default-rtdb.firebaseio.com",
+        //     projectId: "contact-form-6d16d",
+        //     storageBucket: "contact-form-6d16d.appspot.com",
+        //     messagingSenderId: "554996497997",
+        //     appId: "1:554996497997:web:78a40239df3b559caae604",
+        //     measurementId: "G-N3J938V17H"
+        // };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+        // // Initialize Firebase
+        // const app = initializeApp(firebaseConfig);
 
-        const db = getDatabase();
+        // const db = getDatabase();
 
         // Get references to the containers for each group of adverts
         let educationalAds = document.getElementById('educationalAds');

@@ -11,11 +11,9 @@
     var emailid = getElementVal("companyEmail");
   
     var msgContent = getElementVal("msgContent");
-    var Inpimg = document.getElementById("Inpimg").files[0];
     var fundingType = getElementVal("fundingType");
-    var currentDate = getCurrentDate(); // Get current date
   
-    saveMessages(companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate);
+    saveMessages(companyName, fundManagerEmail, emailid, msgContent, name, fundingType);
   
     // Enable alert
     document.querySelector(".alert").style.display = "block";
@@ -29,7 +27,7 @@
     document.getElementById("contactForm").reset();
   }
   
-  async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate) {
+  async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, name, fundingType) {
     const postOptions = {
       method: "POST",
       headers: {
@@ -41,9 +39,7 @@
         emailid: emailid,
         fundManagerEmail : fundManagerEmail,
         msgContent: msgContent,
-        image: Inpimg.name,
         fundingType: fundingType, // Store funding type
-        date: currentDate // Store current date
       })
     }
   
@@ -58,13 +54,4 @@
   
   const getElementVal = (id) => {
     return document.getElementById(id).value;
-  };
-  
-  const getCurrentDate = () => {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-    var yyyy = today.getFullYear();
-  
-    return dd + '/' + mm + '/' + yyyy;
   };

@@ -21,9 +21,10 @@ async function Getads() {
         try {
             const data = await fetch('/api/fundManager/ads', postOptions);
             const response = await data.json();
+            console.log(response);
             response.forEach(ad => {
                 AddadsAsListItem(ad);
-            })
+            });
         } catch (e) {
             console.error("ERROR:", e)
         }
@@ -32,8 +33,9 @@ async function Getads() {
     }
 }
 
-function AddadsAsListItem(adSnapshot) {
-    let adData = adSnapshot.val();
+function AddadsAsListItem(adData) {
+    const ad = adData.data;
+    const adId = adData.id; // Get the document ID
 
     let adContainer = document.createElement('div');
     adContainer.classList.add('ad-container');
@@ -42,27 +44,22 @@ function AddadsAsListItem(adSnapshot) {
     adTitle.textContent = "Funding Advert ";
 
     let name = document.createElement('p');
-    name.textContent = "Names: " + adData.name;
+    name.textContent = "Names: " + ad.name;
 
     let company = document.createElement('p');
-    company.textContent = "Company Name: " + adData.companyName;
+    company.textContent = "Company Name: " + ad.companyName;
 
     let msg = document.createElement('p');
-    msg.textContent = "Description: " + adData.msgContent;
+    msg.textContent = "Description: " + ad.msgContent;
 
     let email = document.createElement('p');
-    email.textContent = "Company Email: " + adData.emailid;
-
-    // Create an image element
-    let image = document.createElement('img');
-    image.src = adData.image; // Set the src attribute to the image URL
-    image.alt = "Advert Image"; // Optional: Set alt attribute for accessibility
+    email.textContent = "Company Email: " + ad.emailid;
 
     let datePosted = document.createElement('p');
-    datePosted.textContent = "Date Posted: " + adData.date;
+    datePosted.textContent = "Date Posted: " + ad.date;
 
     let adType = document.createElement('p');
-    adType.textContent = "Funding Type: " + adData.fundingType;
+    adType.textContent = "Funding Type: " + ad.fundingType;
 
     let editButton = document.createElement('button');
     editButton.textContent = "Edit";
@@ -74,14 +71,14 @@ function AddadsAsListItem(adSnapshot) {
     deleteButton.addEventListener('click', () => {
         // Remove ad container from the DOM
         adContainer.remove();
-        // Remove ad data from Firebase database
-        removeAdFromDatabase(adSnapshot.key);
+        // Remove ad data from Firebase database using the document ID
+        removeAdFromDatabase(adId);
     });
 
     // Add event listener to the edit button
     editButton.addEventListener('click', () => {
-        // Redirect to Update.html page
-        window.location.href = "UpdateAdds.html?id=" + adSnapshot.key;
+        // Redirect to Update.html page with the document ID
+        window.location.href = "UpdateAdds.html?id=" + adId;
     });
 
     adContainer.appendChild(adTitle);
@@ -89,14 +86,13 @@ function AddadsAsListItem(adSnapshot) {
     adContainer.appendChild(company);
     adContainer.appendChild(msg);
     adContainer.appendChild(email);
-    adContainer.appendChild(image); // Append the image element
     adContainer.appendChild(datePosted);
     adContainer.appendChild(adType);
     adContainer.appendChild(editButton);
     adContainer.appendChild(deleteButton);
 
     // Append the advert to the respective container based on its funding type
-    switch (adData.fundingType) {
+    switch (ad.fundingType) {
         case 'educational':
             adTitle.textContent += educationalNo;
             educationalAds.appendChild(adContainer);
@@ -116,6 +112,7 @@ function AddadsAsListItem(adSnapshot) {
             break;
     }
 }
+
 
 async function removeAdFromDatabase(adKey) {
     const postOptions = {
