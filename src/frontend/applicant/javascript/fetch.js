@@ -6,7 +6,7 @@ let no = 1;
 
 async function Getads() {
   try {
-    const data = await fetch('/api/applicant/ads');
+    const data = await fetch('/api/applicant/');
     const response = await data.json();
     console.log(response);
     response.forEach(ad => {
