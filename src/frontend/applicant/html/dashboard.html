@@ -1,34 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+  <title>Redirect Button</title>
 </head>
-
 <body>
-    <header>
-        <h1>Welcome back Applicant</h1>
-    </header>
+    <style>
+        /* Add some basic styling to the buttons */
+        button {
+          display: block; /* Make each button a block element to place them on separate lines */
+          width: 100%; /* Make the buttons full width */
+          background-color: #4CAF50; /* Green */
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-bottom: 20px; /* Add some space between the buttons */
+        }
+        button:hover {
+          background-color: #3e8e41; /* Darker green on hover */
+        }
+      </style> 
 
-    <main>
-        <section>
-            <h2>Overview</h2>
-            <p>This section provides an overview of important metrics and information.</p>
-        </section>
+  <button id="b">Educational applicants report</button>
+  <button id="b1">Business applicants Report</button>
+  <button id="b2">Event applicants Report</button>
+  <button id="b3">App Users Report</button>
 
-        <section>
-            <h2>Recent Activity</h2>
-            <p>This section displays recent activities and events.</p>
-        </section>
+ 
 
-        <section>
-            <h2>Statistics</h2>
-            <p>This section presents various statistics and data visualizations.</p>
-        </section>
-    </main>
+  <script>
+    const button = document.getElementById('b');
+    const button1 = document.getElementById('b1');
+    const button2 = document.getElementById('b2');
+    const button3 = document.getElementById('b3');
+
+
+    button.addEventListener('click', () => {
+      window.location.href = 'edu.html';
+    });
+  
+button1.addEventListener('click', () => {
+  window.location.href = 'business.html';
+});
+
+button2.addEventListener('click', () => {
+  window.location.href = 'event.html';
+});
+button3.addEventListener('click', () => {
+  window.location.href = '1st_report.html';
+});
+  </script>
 </body>
-
 </html>
