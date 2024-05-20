@@ -247,7 +247,7 @@ function deductUserBalance(userId, amount) {
 
 // Function to allocate funds to a specific recipient
 function allocateFunds(userId, transactionData) {
-    db.collection('Finances').doc(userId).collection('transactions').add(transactionData)
+    collection(db, 'Finances').doc(userId).add(transactionData)
         .then(() => {
             alert("Funds allocated successfully.");
             checkBalance();
