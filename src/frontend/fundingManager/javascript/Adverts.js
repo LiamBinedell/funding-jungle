@@ -30,8 +30,6 @@
   }
   
   async function saveMessages (companyName, fundManagerEmail, emailid, msgContent, Inpimg, name, fundingType, currentDate) {
-    var newContactForm = contactFormDB.push();
-  
     const postOptions = {
       method: "POST",
       headers: {
