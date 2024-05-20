@@ -14,6 +14,29 @@ async function uploadImage(Inpimg){
     }
 }
 
+const getAdsController = async (req, res) => {
+    const {email} = req.body;
+
+    const dbref = ref(db);
+
+    try {
+        const adsSnapshot = await get(child(dbref, 'contact-form'));
+
+        const ads = [];
+        adsSnapshot.forEach(adSnap => {
+            const ad = adSnap.val();
+            if (ad['fundManagerEmail'] === email){
+                ads.push(ad);
+            }
+        });
+
+        res.status(200).json(ads);
+    } catch (e) {
+        console.error("ERROR", e);
+        res.status(500).send(e);
+    }
+};
+
 const createAdController = async (req,res) => {
     const dbref = ref(db);
     const newAdRef = push(dbref);
@@ -53,6 +76,6 @@ const deleteAdController = async (req, res) => {
         console.error("ERROR:", e);
         res.status(500).send("Error deleting ad");
     }
-}
+};
 
-module.exports = {createAdController, deleteAdController};
+module.exports = {createAdController, deleteAdController, getAdsController};

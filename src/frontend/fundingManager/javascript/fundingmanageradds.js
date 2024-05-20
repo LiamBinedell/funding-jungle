@@ -1,23 +1,3 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyAlvmNiLshOuBnhR1k2w0UGbB21bFLfVC8",
-    authDomain: "contact-form-6d16d.firebaseapp.com",
-    databaseURL: "https://contact-form-6d16d-default-rtdb.firebaseio.com",
-    projectId: "contact-form-6d16d",
-    storageBucket: "contact-form-6d16d.appspot.com",
-    messagingSenderId: "554996497997",
-    appId: "1:554996497997:web:78a40239df3b559caae604",
-    measurementId: "G-N3J938V17H"
-  };
-  
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-const db = getDatabase();
-
 let educationalAds = document.getElementById('educationalAds');
 let businessAds = document.getElementById('businessAds');
 let eventsAds = document.getElementById('eventsAds');
@@ -25,19 +5,28 @@ let educationalNo = 1;
 let businessNo = 1;
 let eventsNo = 1;
 
-function Getads() {
-    const dbref = ref(db);
+async function Getads() {
     const loggedInEmail = sessionStorage.getItem('loggedInFundingManager');
     if (loggedInEmail) {
-        get(child(dbref, 'contactForm')).then((adsSnapshot) => {
-            adsSnapshot.forEach(adSnapshot => {
-                let adData = adSnapshot.val();
-                // Check if the ad was posted by the logged-in user
-                if (adData.fundManagerEmail === loggedInEmail) {
-                    AddadsAsListItem(adSnapshot);
-                }
-            });
-        });
+        const postOptions = {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: loggedInEmail
+            })
+        }
+        
+        try {
+            const data = await fetch('/api/fundManager/ads', postOptions);
+            const response = await data.json();
+            response.forEach(ad => {
+                AddadsAsListItem(ad);
+            })
+        } catch (e) {
+            console.error("ERROR:", e)
+        }
     } else {
         console.log("No user logged in");
     }
@@ -128,15 +117,23 @@ function AddadsAsListItem(adSnapshot) {
     }
 }
 
-function removeAdFromDatabase(adKey) {
-    // Reference the specific ad in the database
-    const adRef = ref(db, 'contactForm/' + adKey);
-    // Remove the ad data from the database
-    remove(adRef).then(() => {
-        console.log("Ad removed successfully");
-    }).catch((error) => {
-        console.error("Error removing ad: ", error);
-    });
+async function removeAdFromDatabase(adKey) {
+    const postOptions = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            key: adKey
+        })
+    };
+
+    try {
+        const data = await fetch('/api/fundManager/delete', postOptions);
+        const response = await data.text();
+    } catch (e) {
+        console.error("ERROR:", e);
+    }
 }
 
 window.addEventListener('load', Getads);
