@@ -1,5 +1,8 @@
-const someFundFunctionController = async (req,res) => {
-    res.status(200).send("Does something");
+const {db} = require('../databases/contact-form');
+
+
+const createAdController = async (req,res) => {
+    
 };
 
-module.exports = {someFundFunctionController};
+module.exports = {createAdController};

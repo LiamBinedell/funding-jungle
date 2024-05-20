@@ -93,7 +93,7 @@ async function loadUserApplications(){
 async function loadFundingAdverts(){
     clearDOM();
     const data = await fetch('/api/admin/ads');
-    const ads = data.json();
+    const ads = await data.json();
 
     console.log(ads);
 }
