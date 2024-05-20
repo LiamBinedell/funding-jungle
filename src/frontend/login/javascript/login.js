@@ -16,6 +16,7 @@ async function login(emailAddr, password){
   switch (response){
     case "applicant":
       alert('Applicant successfully logged in');
+     sessionStorage.setItem('loggedInApplicant', emailAddr);
       window.location.href = "../../applicant/html/Applicant.html";
       break;
     case "fundingManager":
