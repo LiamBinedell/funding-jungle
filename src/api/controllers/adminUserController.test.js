@@ -4,9 +4,9 @@ const {
     approveUserController,
     denyUserController,
     deleteDeniedUser
-} = require('./adminController');
+} = require('./adminUserController');
 
-jest.mock('./adminController', () => ({
+jest.mock('./adminUserController', () => ({
     deleteDeniedUser: jest.fn()
   }));
   
