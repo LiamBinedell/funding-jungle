@@ -21,9 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const approveButton = document.getElementById('approve-btn');
     const declineButton = document.getElementById('decline-btn');
 
-    function getEducationalForms() {
+    function getBusinessForms() {
         const dbRef = ref(db);
-        get(child(dbRef, 'educationalform')).then((snapshot) => {
+        get(child(dbRef, 'businessform')).then((snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const data = childSnapshot.val();
                 if (data.applicationId === sessionStorage.getItem('applicationId')) {
@@ -48,13 +48,21 @@ document.addEventListener("DOMContentLoaded", function () {
         idNumber.textContent = "ID Number: " + data.idNumber;
         ul.appendChild(idNumber);
 
-        const dob = document.createElement('li');
-        dob.textContent = "Date of Birth: " + data.dob;
-        ul.appendChild(dob);
+        const businessName = document.createElement('li');
+        businessName.textContent = "Business Name: " + data.businessName;
+        ul.appendChild(businessName);
 
-        const gender = document.createElement('li');
-        gender.textContent = "Gender: " + data.gender;
-        ul.appendChild(gender);
+        const registrationNumber = document.createElement('li');
+        registrationNumber.textContent = "Registration Number: " + data.registrationNumber;
+        ul.appendChild(registrationNumber);
+
+        const businessAddress = document.createElement('li');
+        businessAddress.textContent = "Business Address: " + data.businessAddress;
+        ul.appendChild(businessAddress);
+
+        const businessType = document.createElement('li');
+        businessType.textContent = "Business Type: " + data.businessType;
+        ul.appendChild(businessType);
 
         const email = document.createElement('li');
         email.textContent = "Email: " + data.email;
@@ -64,26 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
         phone.textContent = "Phone: " + data.phone;
         ul.appendChild(phone);
 
-        const address = document.createElement('li');
-        address.textContent = "Address: " + data.address1;
-        ul.appendChild(address);
-
-        const institution = document.createElement('li');
-        institution.textContent = "Institution: " + data.institution;
-        ul.appendChild(institution);
-
-        const course = document.createElement('li');
-        course.textContent = "Course: " + data.course;
-        ul.appendChild(course);
-
-        const year = document.createElement('li');
-        year.textContent = "Year Of Study: " + data.year;
-        ul.appendChild(year);
-
-        const grades = document.createElement('li');
-        grades.textContent = "Last Final Grades: " + data.grades;
-        ul.appendChild(grades);
-
         const reason = document.createElement('li');
         reason.textContent = "Motivation Why We Should Award Applicant This Funding: " + data.reason;
         ul.appendChild(reason);
@@ -92,47 +80,20 @@ document.addEventListener("DOMContentLoaded", function () {
         community.textContent = "How Will The Applicant Give Back To The Community: " + data.community;
         ul.appendChild(community);
 
+        const businessPlan = document.createElement('li');
+        businessPlan.textContent = "Business Plan Document: " + data.businessPlan;
+        ul.appendChild(businessPlan);
+
         const idDocument = document.createElement('li');
         idDocument.textContent = "Applicant Certified ID Document: " + data.idDocument;
         ul.appendChild(idDocument);
 
-        const parentId = document.createElement('li');
-        parentId.textContent = "Certified Parent/Guardian ID Document: " + data.parentId;
-        ul.appendChild(parentId);
-
-        const results = document.createElement('li');
-        results.textContent = "Academic Results/Transcript: " + data.results;
-        ul.appendChild(results);
-
-        const incomeProof = document.createElement('li');
-        incomeProof.textContent = "Proof Of Household Income: " + data.incomeProof;
-        ul.appendChild(incomeProof);
-
         adsContainer.appendChild(ul);
 
-        // Attach event listener to approve button
-        approveButton.addEventListener('click', () => {
-            updateStatus(key, 'Approved');
-        });
 
-        // Attach event listener to decline button
-        declineButton.addEventListener('click', () => {
-            updateStatus(key, 'Declined');
-        });
     }
 
-    function updateStatus(key, status) {
-        const updates = {};
-        updates[`/educationalform/${key}/status`] = status;
-        update(ref(db), updates)
-            .then(() => {
-                alert(`Application ${status}`);
-                window.location.href = "EducReviewForm.html";
-            })
-            .catch((error) => {
-                console.error("Error updating status: ", error);
-            });
-    }
 
-    getEducationalForms();
+
+    getBusinessForms();
 });

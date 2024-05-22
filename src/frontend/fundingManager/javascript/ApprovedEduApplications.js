@@ -110,29 +110,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         adsContainer.appendChild(ul);
 
-        // Attach event listener to approve button
-        approveButton.addEventListener('click', () => {
-            updateStatus(key, 'Approved');
-        });
 
-        // Attach event listener to decline button
-        declineButton.addEventListener('click', () => {
-            updateStatus(key, 'Declined');
-        });
     }
 
-    function updateStatus(key, status) {
-        const updates = {};
-        updates[`/educationalform/${key}/status`] = status;
-        update(ref(db), updates)
-            .then(() => {
-                alert(`Application ${status}`);
-                window.location.href = "EducReviewForm.html";
-            })
-            .catch((error) => {
-                console.error("Error updating status: ", error);
-            });
-    }
 
     getEducationalForms();
 });

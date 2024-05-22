@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getDatabase, ref, get, child, update } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCuTCXOYw--m1mg6F2q2zCp1gvf2uw6PYI",
@@ -27,13 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
             snapshot.forEach((childSnapshot) => {
                 const data = childSnapshot.val();
                 if (data.applicationId === sessionStorage.getItem('applicationId')) {
-                    addFormAsListItem(data);
+                    addFormAsListItem(data, childSnapshot.key);
                 }
             });
         });
     }
 
-    function addFormAsListItem(data) {
+    function addFormAsListItem(data, key) {
         const ul = document.createElement('ul');
 
         const firstName = document.createElement('li');
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ul.appendChild(description);
 
         const reason = document.createElement('li');
-        reason.textContent = "Motivation Why We should Award Applicant this Funding: " + data.reason;
+        reason.textContent = "Motivation Why We Should Award Applicant This Funding: " + data.reason;
         ul.appendChild(reason);
 
         const idDocument = document.createElement('li');
@@ -97,17 +97,30 @@ document.addEventListener("DOMContentLoaded", function () {
         ul.appendChild(poster);
 
         adsContainer.appendChild(ul);
+
+        // Attach event listener to approve button
+        approveButton.addEventListener('click', () => {
+            updateStatus(key, 'Approved');
+        });
+
+        // Attach event listener to decline button
+        declineButton.addEventListener('click', () => {
+            updateStatus(key, 'Declined');
+        });
+    }
+
+    function updateStatus(key, status) {
+        const updates = {};
+        updates[`/eventsform/${key}/status`] = status;
+        update(ref(db), updates)
+            .then(() => {
+                alert(`Application ${status}`);
+                window.location.href = "EveReviewForm.html";
+            })
+            .catch((error) => {
+                console.error("Error updating status: ", error);
+            });
     }
 
     getEventsForms();
-
-    // Approve Button Click Event
-    approveButton.addEventListener('click', () => {
-        window.location.href = "EveReviewForm.html";
-    });
-
-    // Decline Button Click Event
-    declineButton.addEventListener('click', () => {
-        window.location.href = "EveReviewForm.html";
-    });
 });
