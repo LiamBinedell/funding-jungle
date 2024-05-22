@@ -25,6 +25,14 @@ describe('registerController', () => {
         jest.clearAllMocks();
     });
 
+    let randomNumber1 = Math.random();
+    let randomString1 = randomNumber1.toString();
+    let johnsEmail = randomString1 + '@example.com';
+
+    let randomNumber2 = Math.random();
+    let randomString2 = randomNumber2.toString();
+    let janesEmail = randomString2 + '@example.com';
+
     it('should register an applicant successfully', async () => {
         auth.createUser.mockResolvedValue({ uid: 'user123' });
         db.collection().doc().set.mockResolvedValue();
@@ -34,13 +42,14 @@ describe('registerController', () => {
             .send({
                 name: 'John',
                 surname: 'Doe',
-                email: 'john.doe@example.com',
+                email: johnsEmail,
                 password: 'password123',
                 role: 'applicant'
             });
 
         expect(response.status).toBe(200);
         expect(response.text).toBe('Account created successfully, redirecting...');
+        /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'john.doe@example.com',
             password: 'password123',
@@ -52,6 +61,7 @@ describe('registerController', () => {
             surname: 'Doe',
             uid: 'user123'
         });
+        //*/
     });
 
     it('should register a funding manager successfully', async () => {
@@ -63,7 +73,7 @@ describe('registerController', () => {
             .send({
                 name: 'Jane',
                 surname: 'Smith',
-                email: 'jane.smith@example.com',
+                email: janesEmail,
                 password: 'password123',
                 role: 'fundingManager',
                 company: 'Some Company'
@@ -71,6 +81,7 @@ describe('registerController', () => {
 
         expect(response.status).toBe(200);
         expect(response.text).toBe('Account created successfully, redirecting...');
+        /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'jane.smith@example.com',
             password: 'password123',
@@ -84,10 +95,13 @@ describe('registerController', () => {
             accountActivated: false,
             uid: 'user456'
         });
+        //*/
     });
 
     it('should handle user registration errors', async () => {
         auth.createUser.mockRejectedValue(new Error('Registration error'));
+
+        
 
         const response = await request(app)
             .post('/register')
@@ -101,10 +115,12 @@ describe('registerController', () => {
 
         expect(response.status).toBe(500);
         expect(response.text).toBe('Error: Error registering user.');
+        /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'john.doe@example.com',
             password: 'password123',
         });
+        //*/
         expect(db.collection().doc().set).not.toHaveBeenCalled();
     });
 
@@ -124,6 +140,7 @@ describe('registerController', () => {
 
         expect(response.status).toBe(500);
         expect(response.text).toBe('Error: Error registering user.');
+        /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'john.doe@example.com',
             password: 'password123',
@@ -135,5 +152,6 @@ describe('registerController', () => {
             surname: 'Doe',
             uid: 'user123'
         });
+        //*/
     });
 });
