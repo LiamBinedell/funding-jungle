@@ -8,7 +8,11 @@ const request = require('supertest');
 jest.mock('firebase/app');
 jest.mock('firebase/firestore');
 jest.mock('firebase/auth');
-jest.mock('firebase-admin');
+jest.mock('firebase-admin', () => {
+  const admin = jest.requireActual('firebase-admin');
+  admin.auth = jest.fn();
+  return admin;
+});
 
 describe('Controller Tests', () => {
   let app;
