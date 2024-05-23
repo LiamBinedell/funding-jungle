@@ -29,6 +29,7 @@ describe('Firebase Controllers', () => {
         firestore.getDocs.mockResolvedValue(mockDocs);
 
         await getAdsController(req, res);
+
         /* Naughty tests go in the comment 
         expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
         expect(firestore.query).toHaveBeenCalled();
@@ -64,11 +65,13 @@ describe('Firebase Controllers', () => {
           fundingType: 'Equity'
         }
       });
+
       const res = mockResponse();
 
       firestore.setDoc.mockResolvedValue();
 
       await createAdController(req, res);
+
       /* Naughty tests go in the comment 
       expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
       expect(firestore.setDoc).toHaveBeenCalled();
@@ -107,6 +110,7 @@ describe('Firebase Controllers', () => {
         firestore.deleteDoc.mockResolvedValue();
 
         await deleteAdController(req, res);
+
         /* Naughty tests go in the comment 
         expect(firestore.doc).toHaveBeenCalledWith(expect.anything(), 'adverts', 'ad-id');
         expect(firestore.deleteDoc).toHaveBeenCalledWith(expect.anything());
