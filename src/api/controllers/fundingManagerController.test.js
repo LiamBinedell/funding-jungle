@@ -55,26 +55,26 @@ describe('Firebase Controllers', () => {
   describe('createAdController', () => {
     it('should create a new ad and return status 200', async () => {
       const req = mockRequest({
-            body: {
-                companyName: 'Test Company',
-                fundManagerEmail: 'manager@example.com',
-                emailid: 'email@example.com',
-                msgContent: 'Message Content',
-                name: 'Test Name',
-                fundingType: 'Equity'
-            }
-        });
-        const res = mockResponse();
+        body: {
+          companyName: 'Test Company',
+          fundManagerEmail: 'manager@example.com',
+          emailid: 'email@example.com',
+          msgContent: 'Message Content',
+          name: 'Test Name',
+          fundingType: 'Equity'
+        }
+      });
+      const res = mockResponse();
 
-        firestore.setDoc.mockResolvedValue();
+      firestore.setDoc.mockResolvedValue();
 
-        await createAdController(req, res);
-        /* Naughty tests go in the comment 
-        expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
-        expect(firestore.setDoc).toHaveBeenCalled();
-        //*/
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.send).toHaveBeenCalledWith('Ad created successfully');
+      await createAdController(req, res);
+      /* Naughty tests go in the comment 
+      expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
+      expect(firestore.setDoc).toHaveBeenCalled();
+      //*/
+       expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith('Ad created successfully');
     });
 
     it('should handle errors and return status 500', async () => {
