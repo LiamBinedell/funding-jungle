@@ -62,11 +62,16 @@ describe('Controller Tests', () => {
       });
 
       firestore.deleteDoc.mockResolvedValue();
-      admin.auth().deleteUser.mockResolvedValue();
+
+      const mockDeleteUser = jest.fn().mockResolvedValue();
+      admin.auth.mockReturnValue({
+        deleteUser: mockDeleteUser
+      });
 
       const response = await request(app).post('/deny').send({ email: 'john@example.com' });
       expect(response.status).toBe(200);
       expect(response.text).toBe('Denied john@example.com');
+      expect(mockDeleteUser).toHaveBeenCalledWith('123');
     });
 
     it('should handle errors when denying a user', async () => {
@@ -76,7 +81,11 @@ describe('Controller Tests', () => {
       });
 
       firestore.deleteDoc.mockRejectedValue(new Error('Delete error'));
-      admin.auth().deleteUser.mockRejectedValue(new Error('Delete error'));
+
+      const mockDeleteUser = jest.fn().mockRejectedValue(new Error('Delete error'));
+      admin.auth.mockReturnValue({
+        deleteUser: mockDeleteUser
+      });
 
       const response = await request(app).post('/deny').send({ email: 'john@example.com' });
       expect(response.status).toBe(500);
