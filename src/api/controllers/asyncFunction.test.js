@@ -1,7 +1,7 @@
 const { getUnactivatedController, approveUserController, denyUserController } = require('./asyncFunction');
 const firebase = require('firebase/app');
 const firestore = require('firebase/firestore');
-const admin = require("firebase-admin");
+const admin = require('firebase-admin');
 const express = require('express');
 const request = require('supertest');
 
