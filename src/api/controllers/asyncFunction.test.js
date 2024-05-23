@@ -8,6 +8,13 @@ const request = require('supertest');
 jest.mock('firebase/app');
 jest.mock('firebase/firestore');
 jest.mock('firebase/auth');
+jest.mock('firebase-admin', () => {
+  const actualAdmin = jest.requireActual('firebase-admin');
+  return {
+    ...actualAdmin,
+    auth: jest.fn(),
+  };
+});
 
 describe('Controller Tests', () => {
   let app;
@@ -63,7 +70,7 @@ describe('Controller Tests', () => {
       firestore.deleteDoc.mockResolvedValue();
 
       const mockDeleteUser = jest.fn().mockResolvedValue();
-      jest.spyOn(admin, 'auth').mockReturnValue({
+      admin.auth.mockReturnValue({
         deleteUser: mockDeleteUser
       });
 
@@ -82,7 +89,7 @@ describe('Controller Tests', () => {
       firestore.deleteDoc.mockRejectedValue(new Error('Delete error'));
 
       const mockDeleteUser = jest.fn().mockRejectedValue(new Error('Delete error'));
-      jest.spyOn(admin, 'auth').mockReturnValue({
+      admin.auth.mockReturnValue({
         deleteUser: mockDeleteUser
       });
 
