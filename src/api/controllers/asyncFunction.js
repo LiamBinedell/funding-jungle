@@ -64,4 +64,38 @@ const approveUserController = async (req, res) => {
 	res.status(200).send(`Approved ${email}`);
 };
 
-module.exports = {getUnactivatedController, approveUserController};
+async function deleteDeniedUserDoc(docID) {
+	try {
+	  await firestore.deleteDoc(firestore.doc(db, "users", docID));
+	} catch (error) {
+	  console.error('Error deleting document:', error);
+	}
+  }
+
+async function deleteDeniedUser(email){
+	const docID = await getDocByEmail(email);
+	console.log(docID);
+	deleteDeniedUserDoc(docID);
+	const result = await admin.auth().deleteUser(docID)
+	.then(() => {
+	  return true
+	})
+	.catch(error => {
+	  console.error("ERROR:", error);
+	  return false;
+	})
+  
+	return result;
+  }
+
+const denyUserController = async (req, res) => {
+    const { email } = req.body;
+    const status = await deleteDeniedUser(email);
+    console.log(status)
+    if (status)
+      res.status(200).send(`Denied ${email}`);
+    else 
+      res.status(500).send(`Error deleting user`);
+};
+
+module.exports = {getUnactivatedController, approveUserController, denyUserController};
