@@ -1,7 +1,14 @@
-const {fetchData, getUnactivatedController, approveUserController} = require('./adminUserController');
+// asyncFunction.test.js
+
+const {fetchData, getUnactivatedController, approveUserController} = require('./asyncFunction');
 const firestore = require('firebase/firestore'); // Adjust the path accordingly
 
-//jest.mock('firebase/firestore');
+jest.mock('firebase/firestore');
+
+test('fetchData resolves with correct message', async () => {
+  const data = await fetchData();
+  expect(data).toBe('Data fetched successfully!');
+});
 
 describe('getUnactivatedController', () => {
   test('should return unverified accounts', async () => {
@@ -101,3 +108,5 @@ describe('approveUserController', () => {
   });
   //*/
 });
+
+  
