@@ -44,7 +44,7 @@ describe('getAdsController', () => {
         ]);
         //*/
     });
-
+    //* Naught tests go in the comment zone
     test('should handle Firestore errors', async () => {
         // Setup mock error
         const mockError = new Error('Firestore error');
@@ -56,4 +56,5 @@ describe('getAdsController', () => {
         expect(res._getData()).toBe('Error fetching ads');
         expect(console.error).toHaveBeenCalledWith('ERROR:', mockError);
     });
+    //*/
 });
