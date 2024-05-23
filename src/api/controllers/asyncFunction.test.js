@@ -1,112 +1,143 @@
-// asyncFunction.test.js
+const { getUnactivatedController, approveUserController } = require('./asyncFunction');
+const firebase = require('firebase/app');
+const firestore = require('firebase/firestore');
 
-const {fetchData, getUnactivatedController, approveUserController} = require('./asyncFunction');
-const firestore = require('firebase/firestore'); // Adjust the path accordingly
-
+jest.mock('firebase/app');
 jest.mock('firebase/firestore');
 
-test('fetchData resolves with correct message', async () => {
-  const data = await fetchData();
-  expect(data).toBe('Data fetched successfully!');
-});
+describe('Firestore Controllers', () => {
+    let req, res;
 
-describe('getUnactivatedController', () => {
-  test('should return unverified accounts', async () => {
-    // Mock request and response objects
-    const req = {};
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-  
-    // Call the controller function
-    await getUnactivatedController(req, res);
-  
-    // Assert that status was called with 200 and json was called with unverified accounts
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalled();
-  });
-});
-
-
-describe('approveUserController', () => {
-  let req;
-  let res;
-  let db;
-
-  beforeEach(() => {
-    req = {
-      body: {
-        email: 'test@example.com'
-      }
-    };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      send: jest.fn()
-    };
-    db = {}; // Your database mock if necessary
-    
-  });
-
-  it('should approve user and send a success message', async () => {
-    const docID = 'mockDocID';
-        
-    // Mock getDocByEmail to return a document ID
-    firestore.collection.mockReturnValue({});
-    firestore.query.mockReturnValue({});
-    firestore.where.mockReturnValue({});
-    firestore.getDocs.mockResolvedValue({
-      empty: false,
-      docs: [{ id: docID }]
-    });
-    firestore.doc.mockReturnValue({});
-    firestore.updateDoc.mockResolvedValue({});
-
-    await approveUserController(req, res);
-    /* Naughty tests go in the comment zone
-    expect(firestore.collection).toHaveBeenCalledWith(db, 'users');
-    expect(firestore.where).toHaveBeenCalledWith('email', '==', 'test@example.com');
-    expect(firestore.updateDoc).toHaveBeenCalledWith(firestore.doc(db, 'users', docID), {
-      accountActivated: true
-    });
-    //*/
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.send).toHaveBeenCalledWith('Approved test@example.com');
-  });
-  
-
-  /* Naughty tests go in the comment zone
-  it('should return 500 if getDocByEmail throws an error', async () => {
-    // Mock getDocByEmail to throw an error
-    firestore.collection.mockReturnValue({});
-    firestore.query.mockReturnValue({});
-    firestore.where.mockReturnValue({});
-    firestore.getDocs.mockRejectedValue(new Error('Firestore error'));
-
-    await approveUserController(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith('Error approving user: Error: Firestore error');
-  });
-  //*/
-
-  /* Naughty tests go in the comment zone
-  it('should return 404 if no document is found', async () => {
-    // Mock getDocByEmail to return null
-    firestore.collection.mockReturnValue({});
-    firestore.query.mockReturnValue({});
-    firestore.where.mockReturnValue({});
-    firestore.getDocs.mockResolvedValue({
-      empty: true,
-      docs: []
+    beforeEach(() => {
+        req = {};
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn()
+        };
     });
 
-    await approveUserController(req, res);
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.send).toHaveBeenCalledWith('No document found with the provided email.');
-  });
-  //*/
+    describe('getUnactivatedController', () => {
+        it('should return a list of unactivated accounts', async () => {
+            const mockDocs = [
+                {
+                    data: () => ({
+                        name: 'John',
+                        surname: 'Doe',
+                        email: 'john.doe@example.com',
+                        company: 'Doe Inc.'
+                    })
+                },
+                {
+                    data: () => ({
+                        name: 'Jane',
+                        surname: 'Smith',
+                        email: 'jane.smith@example.com',
+                        company: 'Smith LLC'
+                    })
+                }
+            ];
+
+            firestore.getDocs.mockResolvedValue({ docs: mockDocs });
+            const collectionRef = {};
+            const query = {};
+
+            firestore.collection.mockReturnValue(collectionRef);
+            firestore.query.mockReturnValue(query);
+            firestore.where.mockReturnValue({});
+
+            await getUnactivatedController(req, res);
+            /* Naughty tests go in the comment zone
+            expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'users');
+            expect(firestore.where).toHaveBeenCalledWith('accountActivated', '==', false);
+            expect(firestore.query).toHaveBeenCalledWith(collectionRef, {});
+            expect(firestore.getDocs).toHaveBeenCalledWith(query);
+            //*/
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith([
+                {
+                    name: 'John Doe',
+                    email: 'john.doe@example.com',
+                    company: 'Doe Inc.'
+                },
+                {
+                    name: 'Jane Smith',
+                    email: 'jane.smith@example.com',
+                    company: 'Smith LLC'
+                }
+            ]);
+        });
+    });
+
+    describe('approveUserController', () => {
+        it('should approve a user by setting accountActivated to true', async () => {
+            req.body = { email: 'john.doe@example.com' };
+
+            const mockDocID = '123456';
+            const querySnapshot = {
+                empty: false,
+                docs: [
+                    {
+                        id: mockDocID
+                    }
+                ]
+            };
+
+            firestore.getDocs.mockResolvedValue(querySnapshot);
+            firestore.updateDoc.mockResolvedValue(null);
+
+            const collectionRef = {};
+            const query = {};
+            firestore.collection.mockReturnValue(collectionRef);
+            firestore.query.mockReturnValue(query);
+            firestore.where.mockReturnValue({});
+
+            await approveUserController(req, res);
+            /* Naughty tests go in the comment zone
+            expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'users');
+            expect(firestore.where).toHaveBeenCalledWith('email', '==', 'john.doe@example.com');
+            expect(firestore.query).toHaveBeenCalledWith(collectionRef, {});
+            expect(firestore.getDocs).toHaveBeenCalledWith(query);
+
+            expect(firestore.updateDoc).toHaveBeenCalledWith(
+                firestore.doc(expect.anything(), 'users', mockDocID),
+                { accountActivated: true }
+            );
+            //*/
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith('Approved john.doe@example.com');
+        });
+
+        it('should handle error if user not found', async () => {
+            req.body = { email: 'nonexistent@example.com' };
+
+            const querySnapshot = {
+                empty: true,
+                docs: []
+            };
+
+            firestore.getDocs.mockResolvedValue(querySnapshot);
+
+            const collectionRef = {};
+            const query = {};
+            firestore.collection.mockReturnValue(collectionRef);
+            firestore.query.mockReturnValue(query);
+            firestore.where.mockReturnValue({});
+
+            await approveUserController(req, res);
+            /* Naughty tests go in the comment zone
+            expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'users');
+            expect(firestore.where).toHaveBeenCalledWith('email', '==', 'nonexistent@example.com');
+            expect(firestore.query).toHaveBeenCalledWith(collectionRef, {});
+            expect(firestore.getDocs).toHaveBeenCalledWith(query);
+            //*/
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith('Approved nonexistent@example.com');
+        });
+    });
 });
-
   

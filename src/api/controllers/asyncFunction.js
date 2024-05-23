@@ -11,19 +11,11 @@ const firebaseConfig = {
 	    messagingSenderId: "642664605739",
 	    appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
 	    measurementId: "G-Q92887FDM2"
-}
-;
+};
+
 // Initialize Firebase
 const firebaseDB = firebaseApp.initializeApp(firebaseConfig);
 const db = firestore.getFirestore(firebaseDB);
-
-async function fetchData() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve("Data fetched successfully!");
-    }, 1000);
-  });
-}
 
 async function getUnactivatedAccounts() {
 	const collectionRef = firestore.collection(db, "users");
@@ -35,7 +27,7 @@ async function getUnactivatedAccounts() {
 		      email: doc.data().email,
 		      company: doc.data().company
 	}));
-	// unverifiedAccounts = "bruh"
+
 	return unverifiedAccounts;
 }
 
@@ -72,4 +64,4 @@ const approveUserController = async (req, res) => {
 	res.status(200).send(`Approved ${email}`);
 };
 
-module.exports = {fetchData, getUnactivatedController, approveUserController};
+module.exports = {getUnactivatedController, approveUserController};
