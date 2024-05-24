@@ -30,8 +30,8 @@ describe('Controller Tests', () => {
 	describe('getUnactivatedController', () => {
 		it('should return unactivated accounts', async () => {
 			const mockDocs = [
-         {data: () => ( {name: 'John', surname: 'Doe', email: 'john@example.com', company: 'ExampleCorp'})},
-         {data: () => ( {name: 'Jane', surname: 'Doe', email: 'jane@example.com', company: 'ExampleCorp'})
+        		{data: () => ( {name: 'John', surname: 'Doe', email: 'john@example.com', company: 'ExampleCorp'})},
+        		{data: () => ( {name: 'Jane', surname: 'Doe', email: 'jane@example.com', company: 'ExampleCorp'})
 			}];
 
 			firestore.getDocs.mockResolvedValue( {docs: mockDocs});
@@ -39,9 +39,9 @@ describe('Controller Tests', () => {
 			const response = await request(app).get('/unactivated');
 			expect(response.status).toBe(200);
 			expect(response.body).toEqual([ 
-        {name: 'John Doe', email: 'john@example.com', company: 'ExampleCorp'}, 
-        {name: 'Jane Doe', email: 'jane@example.com', company: 'ExampleCorp'}
-      ]);
+        		{name: 'John Doe', email: 'john@example.com', company: 'ExampleCorp'}, 
+        		{name: 'Jane Doe', email: 'jane@example.com', company: 'ExampleCorp'}
+      		]);
 		});
 	});
 
