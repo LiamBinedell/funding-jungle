@@ -1,4 +1,4 @@
-const { getUnactivatedController, approveUserController, denyUserController } = require('./asyncFunction');
+const { getUnactivatedController, approveUserController, denyUserController } = require('./adminUserController');
 const firebase = require('firebase/app');
 const firestore = require('firebase/firestore');
 const admin = require('firebase-admin');
