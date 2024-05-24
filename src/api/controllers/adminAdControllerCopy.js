@@ -1,3 +1,4 @@
+//Joel is using this to test the tests, don't worry about it.
 const getAdsController = async (req, res) => {
     const dbref = ref(db);
 
