@@ -1,4 +1,4 @@
-const { denyUserController } = require('../controllers/adminUserController'); // Update with the correct path to your file
+const { denyUserController } = require('../controllers/adminUserController');
 const request = require('supertest');
 
 // Mock Firestore methods

@@ -38,7 +38,7 @@ describe('Firebase Controllers', () => {
 
 			await getAdsController(req, res);
 
-			/* Naughty tests go in the comment 
+			/* Naughty tests go in the comment zone
         	expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
         	expect(firestore.query).toHaveBeenCalled();
         	expect(firestore.where).toHaveBeenCalledWith("fundManagerEmail", "==", 'test@example.com');
@@ -83,7 +83,7 @@ describe('Firebase Controllers', () => {
 
 			await createAdController(req, res);
 
-			/* Naughty tests go in the comment 
+			/* Naughty tests go in the comment zone
     		expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
     		expect(firestore.setDoc).toHaveBeenCalled();
     		//*/
