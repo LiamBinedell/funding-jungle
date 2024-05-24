@@ -1,5 +1,4 @@
-const { loginController, checkIfAccountActivated } = require('../controllers/loginController'); // Replace 'your_file_name' with the actual file name
-
+const { loginController, checkIfAccountActivated } = require('../controllers/loginController'); 
 
 // Mocking the request and response objects
 const req = {

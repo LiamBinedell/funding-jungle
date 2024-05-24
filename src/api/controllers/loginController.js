@@ -33,6 +33,7 @@ const loginController = async (req, res) => {
     const {email, pass} = req.body; 
 
     const verificationStatus = await checkIfAccountActivated(email);
+    console.log("Verification Status:", verificationStatus);
     if (!verificationStatus)
         res.status(401).send("Account pending verification. Please try again later");
     else{
