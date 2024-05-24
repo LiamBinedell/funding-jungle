@@ -38,7 +38,7 @@ describe('Firebase Controllers', () => {
 
 			await getAdsController(req, res);
 
-			  /* Naughty tests go in the comment 
+			/* Naughty tests go in the comment 
         	expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
         	expect(firestore.query).toHaveBeenCalled();
         	expect(firestore.where).toHaveBeenCalledWith("fundManagerEmail", "==", 'test@example.com');
