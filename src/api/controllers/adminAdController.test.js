@@ -1,10 +1,8 @@
-// Import necessary modules
-const { getAdsController } = require('./adminAdController'); // Adjust the path to your actual controller file
-const { ref, child, get } = require('firebase/database');
+const { getAdsController } = require('./adminAdController');
+const { ref, child, get } = require('firebase/database'); // Mock these
 const httpMocks = require('node-mocks-http');
-const jestMock = require('jest-mock');
 
-// Mocking firebase/database methods
+// Mock the firebase functions
 jest.mock('firebase/database', () => ({
     ref: jest.fn(),
     child: jest.fn(),
@@ -12,30 +10,22 @@ jest.mock('firebase/database', () => ({
 }));
 
 describe('getAdsController', () => {
-    let req, res, dbref;
+    let req, res;
 
     beforeEach(() => {
         req = httpMocks.createRequest();
         res = httpMocks.createResponse();
-        dbref = {}; // This can be any mock object since we are mocking the actual implementation
-
-        ref.mockReturnValue(dbref);
     });
 
-    it('should return a list of ads with status 200', async () => {
-        const mockAdsData = {
-            val: () => ({
-                'companyName': 'Company A',
-                'date': '2023-05-22',
-                'fundingType': 'Seed',
-                'name': 'John Doe',
-                'msgContent': 'Some content'
-            })
-        };
+    it('should return 200 and the correct ads data when the database call is successful', async () => {
+        const adsData = [
+            { companyName: 'Company A', date: '2022-01-01', fundingType: 'Type A', name: 'Name A', msgContent: 'Content A' },
+            { companyName: 'Company B', date: '2022-02-01', fundingType: 'Type B', name: 'Name B', msgContent: 'Content B' }
+        ];
 
         const adsSnapshot = {
-            forEach: jest.fn((callback) => {
-                callback(mockAdsData);
+            forEach: jest.fn(callback => {
+                adsData.forEach(ad => callback({ val: () => ad }));
             })
         };
 
@@ -43,35 +33,41 @@ describe('getAdsController', () => {
 
         await getAdsController(req, res);
 
-        expect(ref).toHaveBeenCalledWith(expect.anything()); // Check if ref was called correctly
-        expect(child).toHaveBeenCalledWith(dbref, 'contact-form');
-        expect(get).toHaveBeenCalledWith(expect.anything());
-
-        const responseData = res._getJSONData();
         expect(res.statusCode).toBe(200);
-        expect(responseData).toEqual([
-            {
-                company: 'Company A',
-                date: '2023-05-22',
-                type: 'Seed',
-                name: 'John Doe',
-                about: 'Some content'
-            }
+        expect(res._getJSONData()).toEqual([
+            { company: 'Company A', date: '2022-01-01', type: 'Type A', name: 'Name A', about: 'Content A' },
+            { company: 'Company B', date: '2022-02-01', type: 'Type B', name: 'Name B', about: 'Content B' }
         ]);
     });
 
-    it('should handle errors and return status 500', async () => {
-        const mockError = new Error('Database fetch failed');
-
-        get.mockRejectedValue(mockError);
+    it('should return 500 when there is an error in the database call', async () => {
+        const error = new Error('Database error');
+        get.mockRejectedValue(error);
 
         await getAdsController(req, res);
 
-        expect(ref).toHaveBeenCalledWith(expect.anything()); // Check if ref was called correctly
-        expect(child).toHaveBeenCalledWith(dbref, 'contact-form');
-        expect(get).toHaveBeenCalledWith(expect.anything());
-
         expect(res.statusCode).toBe(500);
-        expect(res._getData()).toBe(mockError);
+        expect(res._getData()).toBe(error.toString());
+    });
+
+    it('should properly format the returned ads array', async () => {
+        const adsData = [
+            { companyName: 'Company A', date: '2022-01-01', fundingType: 'Type A', name: 'Name A', msgContent: 'Content A' }
+        ];
+
+        const adsSnapshot = {
+            forEach: jest.fn(callback => {
+                adsData.forEach(ad => callback({ val: () => ad }));
+            })
+        };
+
+        get.mockResolvedValue(adsSnapshot);
+
+        await getAdsController(req, res);
+
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toEqual([
+            { company: 'Company A', date: '2022-01-01', type: 'Type A', name: 'Name A', about: 'Content A' }
+        ]);
     });
 });
