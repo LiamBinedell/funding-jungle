@@ -1,4 +1,4 @@
-const { getAdsController, createAdController, deleteAdController } = require('./fundingManagerController');
+const { getAdsController, createAdController, deleteAdController } = require('../controllers/fundingManagerController');
 const firestore = require('firebase/firestore');
 const { mockRequest, mockResponse } = require('jest-mock-req-res');
 

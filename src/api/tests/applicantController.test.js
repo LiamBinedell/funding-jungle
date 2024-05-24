@@ -1,4 +1,4 @@
-const { getAdsController } = require('./applicantController');
+const { getAdsController } = require('../controllers/applicantController');
 const { firestore } = require('firebase-admin');
 const httpMocks = require('node-mocks-http');
 

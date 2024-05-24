@@ -4,7 +4,7 @@ const mockFirestore = {
     getDocs: jest.fn()
 };
 
-const { checkIfAccountActivated, loginController } = require('./loginController');
+const { checkIfAccountActivated, loginController } = require('../controllers/loginController');
 
 describe('checkIfAccountActivated', () => {
     beforeEach(() => {
