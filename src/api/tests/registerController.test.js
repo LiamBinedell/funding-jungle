@@ -48,7 +48,7 @@ describe('registerController', () => {
             });
 
         expect(response.status).toBe(200);
-        expect(response.text).toBe('Account created successfully, redirecting...');
+        expect(response.text).toBe('Account created successfully. Redirecting...');
         /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'john.doe@example.com',
@@ -80,7 +80,7 @@ describe('registerController', () => {
             });
 
         expect(response.status).toBe(200);
-        expect(response.text).toBe('Account created successfully, redirecting...');
+        expect(response.text).toBe('Account created successfully. Redirecting...');
         /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'jane.smith@example.com',
@@ -114,7 +114,7 @@ describe('registerController', () => {
             });
 
         expect(response.status).toBe(500);
-        expect(response.text).toBe('Error: Error registering user.');
+        expect(response.text).toBe('Error registering user');
         /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'john.doe@example.com',
@@ -139,7 +139,7 @@ describe('registerController', () => {
             });
 
         expect(response.status).toBe(500);
-        expect(response.text).toBe('Error: Error registering user.');
+        expect(response.text).toBe('Error registering user');
         /* Naughty Tests go in the Comment Zone
         expect(auth.createUser).toHaveBeenCalledWith({
             email: 'john.doe@example.com',
