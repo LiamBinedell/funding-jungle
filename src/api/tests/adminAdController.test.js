@@ -1,7 +1,7 @@
-const { getAdsController } = require('./adminAdController');
-const { ref, child, get } = require('firebase/database'); // Import these
+const { getAdsController } = require('../controllers/adminAdController');
+const { ref, child, get } = require('firebase/database');
 const httpMocks = require('node-mocks-http');
-const { jest } = require('@jest/globals'); // Correctly import jest
+const { jest } = require('@jest/globals');
 
 // Mock the firebase functions
 jest.mock('firebase/database', () => ({

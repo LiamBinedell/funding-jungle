@@ -1,4 +1,4 @@
-const { getAdsController } = require('./applicantController');
+const { getAdsController } = require('../controllers/applicantController');
 const { firestore } = require('firebase-admin');
 const httpMocks = require('node-mocks-http');
 
@@ -37,14 +37,14 @@ describe('getAdsController', () => {
 
         const ads = res._getJSONData();
         expect(res.statusCode).toBe(200);
-        /* Naught tests go in the comment zone
+        /* Naughty tests go in the comment zone
         expect(ads).toEqual([
             { id: '1', data: { title: 'Ad 1' } },
             { id: '2', data: { title: 'Ad 2' } },
         ]);
         //*/
     });
-    /* Naught tests go in the comment zone
+    /* Naughty tests go in the comment zone
     test('should handle Firestore errors', async () => {
         // Setup mock error
         const mockError = new Error('Firestore error');
