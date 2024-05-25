@@ -13,7 +13,7 @@ describe('checkIfAccountActivated', () => {
   });
 
   it('should return false if account is not activated', async () => {
-    firestore.addDoc(firestore.collection(), {
+    await firestore.addDoc(firestore.collection(), {
       email: 'test@example.com',
       role: 'fundingManager',
       accountActivated: false,
@@ -24,7 +24,7 @@ describe('checkIfAccountActivated', () => {
   });
 
   it('should return true if account is activated', async () => {
-    firestore.addDoc(firestore.collection(), {
+    await firestore.addDoc(firestore.collection(), {
       email: 'activated@example.com',
       role: 'fundingManager',
       accountActivated: true,
@@ -56,7 +56,7 @@ describe('loginController', () => {
     });
     const res = httpMocks.createResponse();
 
-    firestore.addDoc(firestore.collection(), {
+    await firestore.addDoc(firestore.collection(), {
       email: 'test@example.com',
       role: 'fundingManager',
       accountActivated: false,
@@ -78,8 +78,8 @@ describe('loginController', () => {
     });
     const res = httpMocks.createResponse();
 
-    firestore.addDoc(firestore.collection(), {
-      uid: 'user123',
+    await firestore.addDoc(firestore.collection(), {
+      id: 'user123',
       email: 'activated@example.com',
       role: 'fundingManager',
     });
