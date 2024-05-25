@@ -67,12 +67,12 @@ describe('loginController', () => {
     expect(res._getData()).toBe('Account pending verification. Please try again later');
   });
 
-  it('should respond with 401 if login credentials are invalid', async () => {
+  it('should respond with 200 and role if login is successful', async () => {
     const req = httpMocks.createRequest({
       method: 'POST',
       url: '/login',
       body: {
-        email: 'invalid@example.com',
+        email: 'activated@example.com',
         pass: 'password123',
       },
     });
@@ -80,28 +80,28 @@ describe('loginController', () => {
 
     await firestore.addDoc(firestore.collection(), {
       id: 'user123',
-      email: 'valid@example.com',
-      role: 'applicant',
+      email: 'activated@example.com',
+      role: 'fundingManager',
     });
 
     await loginController(req, res);
-    expect(res.statusCode).toBe(401);
-    //expect(res._getData()).toBe('Invalid email or password');
+    expect(res.statusCode).toBe(200);
+    expect(res._getData()).toBe('fundingManager');
   });
 
-  it('should respond with 200 if login is successful', async () => {
+  it('should respond with 401 if login credentials are invalid', async () => {
     const req = httpMocks.createRequest({
       method: 'POST',
       url: '/login',
       body: {
-        email: 'valid@example.com',
-        pass: 'password123',
+        email: 'invalid@example.com',
+        pass: 'wrongpassword',
       },
     });
     const res = httpMocks.createResponse();
 
     await loginController(req, res);
-    expect(res.statusCode).toBe(200);
-    //expect(res._getData()).toBe('fundingManager');
+    expect(res.statusCode).toBe(401);
+    expect(res._getData()).toBe('Invalid email or password');
   });
 });
