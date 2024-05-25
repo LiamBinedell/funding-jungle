@@ -38,8 +38,8 @@ describe('Firebase Controllers', () => {
 
 			await getAdsController(req, res);
 
-			/* Naughty tests go in the comment zone
-        	expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
+			//* Naughty tests go in the comment zone
+        	expect(firestore.collection).toHaveBeenCalledWith(undefined, 'adverts');
         	expect(firestore.query).toHaveBeenCalled();
         	expect(firestore.where).toHaveBeenCalledWith("fundManagerEmail", "==", 'test@example.com');
         	expect(firestore.getDocs).toHaveBeenCalled();
@@ -83,8 +83,8 @@ describe('Firebase Controllers', () => {
 
 			await createAdController(req, res);
 
-			/* Naughty tests go in the comment zone
-    		expect(firestore.collection).toHaveBeenCalledWith(expect.anything(), 'adverts');
+			//* Naughty tests go in the comment zone
+    		expect(firestore.collection).toHaveBeenCalledWith(undefined, 'adverts');
     		expect(firestore.setDoc).toHaveBeenCalled();
     		//*/
 			expect(res.status).toHaveBeenCalledWith(200);
@@ -120,9 +120,9 @@ describe('Firebase Controllers', () => {
 			const res = mockResponse();
 			firestore.deleteDoc.mockResolvedValue();
 			await deleteAdController(req, res);
-			/* Naughty tests go in the comment 
-        	expect(firestore.doc).toHaveBeenCalledWith(expect.anything(), 'adverts', 'ad-id');
-        	expect(firestore.deleteDoc).toHaveBeenCalledWith(expect.anything());
+			//* Naughty tests go in the comment 
+        	expect(firestore.doc).toHaveBeenCalledWith(undefined, 'adverts', 'ad-id');
+        	expect(firestore.deleteDoc).toHaveBeenCalledWith(undefined);
         	//*/
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.send).toHaveBeenCalledWith('Document deleted successfully');
