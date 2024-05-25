@@ -1,3 +1,10 @@
+const uid = sessionStorage.getItem('uid');
+const token = `?token=${uid}`;
+
+if (!uid){
+    alert("Fokkof");
+}
+
 function clearDOM() {
     const main = document.getElementById('content');
     while (main.hasChildNodes())
@@ -19,7 +26,7 @@ async function approveUser(emailAddr, listElement) {
         })
     };
 
-    const data = await fetch('/api/admin/approve', postOptions);
+    const data = await fetch('/api/admin/approve' + token, postOptions);
     const response = await data.text();
     alert(response);
     removeListElement(listElement);
@@ -37,28 +44,7 @@ async function denyUser(emailAddr, listElement) {
     };
 
     try {
-        const data = await fetch('/api/admin/deny', postOptions);
-        const response = await data.text();
-        alert(response);
-        removeListElement(listElement);
-    } catch (e) {
-        alert("ERROR:", e);
-    }
-}
-
-async function deleteAdvert(key, listElement){
-    const postOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            key: key
-        })
-    };
-
-    try {
-        const data = await fetch('/api/fundManager/delete', postOptions);
+        const data = await fetch('/api/admin/deny' + token, postOptions);
         const response = await data.text();
         alert(response);
         removeListElement(listElement);
@@ -70,7 +56,7 @@ async function deleteAdvert(key, listElement){
 async function loadUserApplications() {
     clearDOM();
     try {
-        const data = await fetch('/api/admin/');
+        const data = await fetch('/api/admin/' + token);
         const response = await data.json();
 
         console.log(response);
@@ -119,10 +105,31 @@ async function loadUserApplications() {
     }
 }
 
+async function deleteAdvert(key, listElement){
+    const postOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            key: key
+        })
+    };
+
+    try {
+        const data = await fetch('/api/fundManager/delete' + token, postOptions);
+        const response = await data.text();
+        alert(response);
+        removeListElement(listElement);
+    } catch (e) {
+        alert("ERROR:", e);
+    }
+}
+
 async function loadFundingAdverts() {
     clearDOM();
     try {
-        const data = await fetch('/api/applicant/');
+        const data = await fetch('/api/applicant/' + token);
         const ads = await data.json();
 
         console.log(ads);
@@ -169,11 +176,25 @@ async function loadFundingAdverts() {
     }
 }
 
+async function logOut(){
+    try {
+        const data = await fetch('/api/admin/out' + token);
+        const response = await data.text();
+        sessionStorage.removeItem('uid');
+        alert(response);
+    } catch (e) {
+        console.error("ERROR:", e);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const fundingAds = document.getElementById('fundingAds');
     const userApplications = document.getElementById('userApplications');
+    const signOut = document.getElementById('signOut');
 
-    fundingAds.addEventListener('click', loadFundingAdverts)
+    fundingAds.addEventListener('click', loadFundingAdverts);
 
     userApplications.addEventListener('click', loadUserApplications);
+
+    signOut.addEventListener('click', logOut);
 });
