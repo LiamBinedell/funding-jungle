@@ -2,7 +2,7 @@ let usersCollection = [];
 
 const firestore = {
   getFirestore: jest.fn().mockReturnValue({}),
-  collection: jest.fn().mockReturnValue({}),
+  collection: jest.fn(() => ({})),
   addDoc: jest.fn((collectionRef, data) => {
     const id = `id_${usersCollection.length + 1}`;
     usersCollection.push({ ...data, id });
@@ -10,15 +10,15 @@ const firestore = {
   }),
   query: jest.fn((collectionRef, ...queryConstraints) => {
     let filteredUsers = usersCollection;
-    for (const constraint of queryConstraints) {
-      if (constraint.field === "email") {
+    queryConstraints.forEach(constraint => {
+      if (constraint.field === 'email') {
         filteredUsers = filteredUsers.filter(user => user.email === constraint.value);
-      } else if (constraint.field === "role") {
+      } else if (constraint.field === 'role') {
         filteredUsers = filteredUsers.filter(user => user.role === constraint.value);
-      } else if (constraint.field === "accountActivated") {
+      } else if (constraint.field === 'accountActivated') {
         filteredUsers = filteredUsers.filter(user => user.accountActivated === constraint.value);
       }
-    }
+    });
     return { docs: filteredUsers.map(user => ({ data: () => user })) };
   }),
   where: jest.fn((field, op, value) => ({ field, op, value })),

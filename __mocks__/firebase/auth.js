@@ -6,7 +6,7 @@ const auth = {
       return Promise.reject(new Error('Invalid email or password'));
     }
   }),
-  getAuth: jest.fn().mockReturnValue({ currentUser: null }),
+  getAuth: jest.fn().mockReturnValue({}),
 };
 
 module.exports = auth;
