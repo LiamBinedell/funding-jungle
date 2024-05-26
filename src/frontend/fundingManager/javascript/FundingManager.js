@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(data);
             window.location.href = '../../login/html/login.html';
         } catch (e) {
+            alert('Error logging out');
             console.error("ERROR:", e);
         }
     });

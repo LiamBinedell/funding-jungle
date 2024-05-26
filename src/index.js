@@ -10,8 +10,7 @@ const {
     adminRouter, 
     applicantRouter, 
     fundingManagerRouter,
-    fundsRouter,
-    applicationRouter
+    fundsRouter
 } = require('./api/routes/routerIndex');
 
 const app = express();
@@ -28,7 +27,6 @@ app.use('/api/login', loginRouter);
 app.use('/api/applicant', applicantRouter);
 app.use('/api/fundManager', fundingManagerRouter);
 app.use('/api/funds', fundsRouter);
-app.use('/api/applications', applicationRouter);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

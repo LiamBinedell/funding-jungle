@@ -19,9 +19,14 @@ async function approveUser(emailAddr, listElement) {
         })
     };
 
-    const data = await fetch('/api/admin/approve' + token, postOptions);
-    const response = await data.text();
-    alert(response);
+    try {
+        const data = await fetch('/api/admin/approve', postOptions);
+        const response = await data.text();
+        alert(response);
+    } catch (e) {
+        alert('Error approving user');
+        console.error("ERROR:", e);
+    }
     removeListElement(listElement);
 }
 
@@ -37,19 +42,20 @@ async function denyUser(emailAddr, listElement) {
     };
 
     try {
-        const data = await fetch('/api/admin/deny' + token, postOptions);
+        const data = await fetch('/api/admin/deny', postOptions);
         const response = await data.text();
         alert(response);
         removeListElement(listElement);
     } catch (e) {
-        alert("ERROR:", e);
+        alert('Error denying user');
+        console.error("ERROR:", e);
     }
 }
 
 async function loadUserApplications() {
     clearDOM();
     try {
-        const data = await fetch('/api/admin/' + token);
+        const data = await fetch('/api/admin/');
         const response = await data.json();
 
         console.log(response);
@@ -94,6 +100,7 @@ async function loadUserApplications() {
             ul.appendChild(listElement);
         });
     } catch (e) {
+        alert('Error fetching applications');
         alert("ERROR:", e);
     }
 }
@@ -110,19 +117,20 @@ async function deleteAdvert(key, listElement){
     };
 
     try {
-        const data = await fetch('/api/fundManager/delete' + token, postOptions);
+        const data = await fetch('/api/fundManager/delete', postOptions);
         const response = await data.text();
         alert(response);
         removeListElement(listElement);
     } catch (e) {
-        alert("ERROR:", e);
+        alert('Error deleting advert');
+        console.error("ERROR:", e);
     }
 }
 
 async function loadFundingAdverts() {
     clearDOM();
     try {
-        const data = await fetch('/api/applicant/' + token);
+        const data = await fetch('/api/applicant/');
         const ads = await data.json();
 
         console.log(ads);
@@ -165,14 +173,14 @@ async function loadFundingAdverts() {
             ul.appendChild(listElement);
         });
     } catch (e) {
-        alert("ERROR:", e);
+        alert('Error loading adverts');
+        console.error("ERROR:", e);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const fundingAds = document.getElementById('fundingAds');
     const userApplications = document.getElementById('userApplications');
-    const signOut = document.getElementById('signOut');
 
     fundingAds.addEventListener('click', loadFundingAdverts);
 
@@ -186,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(data);
             window.location.href = '../../login/html/login.html';
         } catch (e) {
+            alert('Error logging out');
             console.error("ERROR:", e);
         }
     });

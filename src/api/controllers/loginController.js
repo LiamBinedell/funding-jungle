@@ -53,6 +53,8 @@ const loginController = async (req, res) => {
                 const role = documentSnapshot.data()["role"];
 
                 res.status(200).send(role);
+            } else {
+                res.status(500).send("User does not exist");
             }
         }
     } catch (e) {
