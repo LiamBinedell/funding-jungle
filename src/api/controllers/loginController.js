@@ -38,6 +38,7 @@ const loginController = async (req, res) => {
         const verificationStatus = await checkIfAccountActivated(email);
 
         if (!verificationStatus){
+            console.log("sign out deez nuts");
             await authorization.signOut(auth);
 
             res.status(401).send("Account pending verification. Please try again later");
