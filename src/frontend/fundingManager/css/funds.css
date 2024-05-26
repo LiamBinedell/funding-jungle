@@ -1,0 +1,66 @@
+/* funds.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8f7; /* Light green background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Align items in a column */
+    align-items: center;
+    height: 100vh;
+}
+
+h1 {
+    color: #4caf50; /* Green header text */
+    text-align: center;
+    
+    top: 0; /* Position at the top */
+    width: 100%; /* Full width */
+    background-color: #d0f0c0; /* Lighter green background */
+    padding: 10px 0; /* Add padding for better visibility */
+    margin: 0; /* Remove default margin */
+    z-index: 1; /* Ensure it's on top of other content */
+}
+
+div {
+    margin-top: 50px; /* Add margin to create space below the header */
+    background-color: #d0f0c0; /* Lighter green container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+p#balance {
+    color: #333; /* Balance text color */
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+label {
+    color: #555; /* Label text color */
+}
+
+input[type="number"],
+button {
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="number"] {
+    width: 100px;
+}
+
+button {
+    background-color: #4caf50; /* Green button background */
+    color: #fff; /* Button text color */
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
