@@ -3,14 +3,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/fireba
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCuTCXOYw--m1mg6F2q2zCp1gvf2uw6PYI",
-    authDomain: "simple-633fa.firebaseapp.com",
-    databaseURL: "https://simple-633fa-default-rtdb.firebaseio.com",
-    projectId: "simple-633fa",
-    storageBucket: "simple-633fa.appspot.com",
-    messagingSenderId: "616105900248",
-    appId: "1:616105900248:web:728ee133191dfba3f97fad",
-    measurementId: "G-LVEZE5P5F4"
+  apiKey: "AIzaSyB1bLJJAlJWzwcg4Dvku1KZM3cgR4TbONM",
+  authDomain: "fundingjungle-1f03d.firebaseapp.com",
+  databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com",
+  projectId: "fundingjungle-1f03d",
+  storageBucket: "fundingjungle-1f03d.appspot.com",
+  messagingSenderId: "642664605739",
+  appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
+  measurementId: "G-Q92887FDM2"
 };
 
 // Initialize Firebase
@@ -23,7 +23,7 @@ const adsContainer = document.getElementById('form');
 function Getform() {
     const dbref = ref(db);
     get(child(dbref, 'educationalform')).then((snapshot) => {
-      let tableHtml = '<table id="dataTable" ><tr><th>Name</th><th>Reason</th><th>Email</th>';
+      let tableHtml = '<table id="dataTable" ><tr><th>Name</th><th>Reason</th><th>email</th>';
       snapshot.forEach((childSnapshot) => {
         const data = childSnapshot.val();
         tableHtml += `<tr>

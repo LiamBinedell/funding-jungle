@@ -16,7 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseDB = firebaseApp.initializeApp(firebaseConfig);
 const db = firestore.getFirestore(firebaseDB);
-const auth = authorization.getAuth();
+const auth = authorization.getAuth(firebaseDB);
 
 async function checkIfAccountActivated(email){
     const collectionRef = firestore.collection(db, "users");
@@ -32,30 +32,45 @@ async function checkIfAccountActivated(email){
 const loginController = async (req, res) => {
     const {email, pass} = req.body; 
 
-    const verificationStatus = await checkIfAccountActivated(email);
-    if (!verificationStatus)
-        res.status(401).send("Account pending verification. Please try again later");
-    else{
-        authorization.signInWithEmailAndPassword(auth, email, pass)
-        .then((userCredential) => {
-            const user = userCredential.user;
+    try {
+        const userCredential = await authorization.signInWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+        const verificationStatus = await checkIfAccountActivated(email);
+
+        if (!verificationStatus){
+            console.log("sign out deez nuts");
+            await authorization.signOut(auth);
+
+            res.status(401).send("Account pending verification. Please try again later");
+        } else {
             console.log(`USER LOGIN: ${user.uid}: ${email}`);
 
             const documentRef = firestore.doc(db, "users", user.uid);
-            firestore.getDoc(documentRef)
-            .then(documentSnapshot => {
-                if (documentSnapshot.exists()){
-                    const role = documentSnapshot.data()["role"];
-                    res.status(200).send(role);
-                }
-            })
-            .catch(error => console.error("ERROR:", error));
-        })
-        .catch((error) => {
-            console.error("Error logging in", error);
-            res.status(401).send("Invalid email or password");
-        });
+
+            const documentSnapshot = await firestore.getDoc(documentRef);
+
+            if (documentSnapshot.exists()){
+                const role = documentSnapshot.data()["role"];
+
+                res.status(200).send(role);
+            } else {
+                res.status(500).send("User does not exist");
+            }
+        }
+    } catch (e) {
+        console.error("ERROR:", e);
+        res.status(500).json({message: "Login error"});
     }
 };
 
-module.exports = {loginController, checkIfAccountActivated};
+const logoutController = async (req, res) => {
+    try {
+        await authorization.signOut(auth);
+        res.status(200).send('Logging out...');
+    } catch (e) {
+        console.log("ERROR:", e);
+        res.status(500).send('Error logging out');
+    }
+}
+
+module.exports = {loginController, checkIfAccountActivated, logoutController};

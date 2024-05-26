@@ -1,16 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getDatabase, ref, get, child, update } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCuTCXOYw--m1mg6F2q2zCp1gvf2uw6PYI",
-    authDomain: "simple-633fa.firebaseapp.com",
-    databaseURL: "https://simple-633fa-default-rtdb.firebaseio.com",
-    projectId: "simple-633fa",
-    storageBucket: "simple-633fa.appspot.com",
-    messagingSenderId: "616105900248",
-    appId: "1:616105900248:web:728ee133191dfba3f97fad",
-    measurementId: "G-LVEZE5P5F4"
-};
+    apiKey: "AIzaSyB1bLJJAlJWzwcg4Dvku1KZM3cgR4TbONM",
+    authDomain: "fundingjungle-1f03d.firebaseapp.com",
+    databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com",
+    projectId: "fundingjungle-1f03d",
+    storageBucket: "fundingjungle-1f03d.appspot.com",
+    messagingSenderId: "642664605739",
+    appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
+    measurementId: "G-Q92887FDM2"
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -27,13 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
             snapshot.forEach((childSnapshot) => {
                 const data = childSnapshot.val();
                 if (data.applicationId === sessionStorage.getItem('applicationId')) {
-                    addFormAsListItem(data);
+                    addFormAsListItem(data, childSnapshot.key);
                 }
             });
         });
     }
 
-    function addFormAsListItem(data) {
+    function addFormAsListItem(data, key) {
         const ul = document.createElement('ul');
 
         const firstName = document.createElement('li');
@@ -108,19 +108,31 @@ document.addEventListener("DOMContentLoaded", function () {
         incomeProof.textContent = "Proof Of Household Income: " + data.incomeProof;
         ul.appendChild(incomeProof);
 
-
         adsContainer.appendChild(ul);
+
+        // Attach event listener to approve button
+        approveButton.addEventListener('click', () => {
+            updateStatus(key, 'Approved');
+        });
+
+        // Attach event listener to decline button
+        declineButton.addEventListener('click', () => {
+            updateStatus(key, 'Declined');
+        });
+    }
+
+    function updateStatus(key, status) {
+        const updates = {};
+        updates[`/educationalform/${key}/status`] = status;
+        update(ref(db), updates)
+            .then(() => {
+                alert(`Application ${status}`);
+                window.location.href = "EducReviewForm.html";
+            })
+            .catch((error) => {
+                console.error("Error updating status: ", error);
+            });
     }
 
     getEducationalForms();
-
-    // Approve Button Click Event
-    approveButton.addEventListener('click', () => {
-        window.location.href = "EducReviewForm.html";
-    });
-
-    // Decline Button Click Event
-    declineButton.addEventListener('click', () => {
-        window.location.href = "EducReviewForm.html";
-    });
 });

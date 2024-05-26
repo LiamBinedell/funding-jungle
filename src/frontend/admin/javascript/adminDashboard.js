@@ -19,9 +19,14 @@ async function approveUser(emailAddr, listElement) {
         })
     };
 
-    const data = await fetch('/api/admin/approve', postOptions);
-    const response = await data.text();
-    alert(response);
+    try {
+        const data = await fetch('/api/admin/approve', postOptions);
+        const response = await data.text();
+        alert(response);
+    } catch (e) {
+        alert('Error approving user');
+        console.error("ERROR:", e);
+    }
     removeListElement(listElement);
 }
 
@@ -42,28 +47,8 @@ async function denyUser(emailAddr, listElement) {
         alert(response);
         removeListElement(listElement);
     } catch (e) {
-        alert("ERROR:", e);
-    }
-}
-
-async function deleteAdvert(key, listElement){
-    const postOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            key: key
-        })
-    };
-
-    try {
-        const data = await fetch('/api/fundManager/delete', postOptions);
-        const response = await data.text();
-        alert(response);
-        removeListElement(listElement);
-    } catch (e) {
-        alert("ERROR:", e);
+        alert('Error denying user');
+        console.error("ERROR:", e);
     }
 }
 
@@ -115,7 +100,30 @@ async function loadUserApplications() {
             ul.appendChild(listElement);
         });
     } catch (e) {
+        alert('Error fetching applications');
         alert("ERROR:", e);
+    }
+}
+
+async function deleteAdvert(key, listElement){
+    const postOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            key: key
+        })
+    };
+
+    try {
+        const data = await fetch('/api/fundManager/delete', postOptions);
+        const response = await data.text();
+        alert(response);
+        removeListElement(listElement);
+    } catch (e) {
+        alert('Error deleting advert');
+        console.error("ERROR:", e);
     }
 }
 
@@ -165,7 +173,8 @@ async function loadFundingAdverts() {
             ul.appendChild(listElement);
         });
     } catch (e) {
-        alert("ERROR:", e);
+        alert('Error loading adverts');
+        console.error("ERROR:", e);
     }
 }
 
@@ -173,7 +182,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const fundingAds = document.getElementById('fundingAds');
     const userApplications = document.getElementById('userApplications');
 
-    fundingAds.addEventListener('click', loadFundingAdverts)
+    fundingAds.addEventListener('click', loadFundingAdverts);
 
     userApplications.addEventListener('click', loadUserApplications);
+
+    document.getElementById('signOut').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/login/logout');
+
+            const data = await response.text();
+            alert(data);
+            window.location.href = '../../login/html/login.html';
+        } catch (e) {
+            alert('Error logging out');
+            console.error("ERROR:", e);
+        }
+    });
 });

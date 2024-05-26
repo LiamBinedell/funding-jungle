@@ -1,5 +1,5 @@
   document.getElementById("contactForm").addEventListener("submit", submitForm);
-  
+  //hello
   function submitForm(e) {
     e.preventDefault();
     var name = getElementVal("name");

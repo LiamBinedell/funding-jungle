@@ -1,22 +1,25 @@
-async function login(emailAddr, password){
+if (sessionStorage.getItem('uid'))  
+  sessionStorage.removeItem('uid');
+
+async function login(emailAddr, password) {
   const postOptions = {
     method: "POST",
     headers: {
-        "Content-Type": "application/json"
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        email: emailAddr,
-        pass: password
+      email: emailAddr,
+      pass: password
     })
   };
 
   const data = await fetch('/api/login/', postOptions);
   const response = await data.text();
 
-  switch (response){
+  switch (response) {
     case "applicant":
       alert('Applicant successfully logged in');
-     sessionStorage.setItem('loggedInApplicant', emailAddr);
+      sessionStorage.setItem('loggedInApplicant', emailAddr);
       window.location.href = "../../applicant/html/Applicant.html";
       break;
     case "fundingManager":

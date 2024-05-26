@@ -10,5 +10,5 @@ module.exports = {
     adminRouter, 
     applicantRouter, 
     fundingManagerRouter,
-    fundsRouter
+    fundsRouter,
 };
