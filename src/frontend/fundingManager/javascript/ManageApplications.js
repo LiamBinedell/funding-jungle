@@ -25,8 +25,8 @@ function getEducationalForms() {
     get(child(dbRef, 'educationalform')).then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
-            // Filter forms by fundManagerEmail
-            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager')) {
+            // Filter forms by fundManagerEmail and status
+            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status !== 'Approved' && data.status !== 'Declined') {
                 addEducationalFormAsListItem(data);
             }
         });
@@ -106,7 +106,8 @@ function getBusinessForms() {
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
             // Filter forms by fundManagerEmail
-            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager')) {
+            // Filter forms by fundManagerEmail and status
+            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status !== 'Approved' && data.status !== 'Declined') {
                 addBusinessFormAsListItem(data);
             }
         });
@@ -178,8 +179,8 @@ function getEventForms() {
     get(child(dbRef, 'eventsform')).then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
-            // Filter forms by fundManagerEmail
-            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager')) {
+            // Filter forms by fundManagerEmail and status
+            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status !== 'Approved' && data.status !== 'Declined') {
                 addEventFormAsListItem(data);
             }
         });
