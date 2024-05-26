@@ -8,6 +8,7 @@ const firebaseConfig = {
   appId: "1:616105900248:web:728ee133191dfba3f97fad",
   measurementId: "G-LVEZE5P5F4"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -80,7 +81,8 @@ const saveApplication = (applicationId, firstName, lastName, idNumber, dob, gend
     idDocument: idDocument,
     parentId: parentId,
     incomeProof: incomeProof,
-    results: results
+    results: results,
+    status: "Pending" // Add the status field with a default value of "Pending"
   });
 };
 
