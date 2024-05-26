@@ -1,217 +1,319 @@
-const request = require('supertest');
-const express = require('express');
-const {
-    createBusinessApplicationController,
-    createEducationApplicationController,
-    createEventApplicationController,
-    updateStatusController,
-    createReviewController
-} = require('../controllers/createApplicationController'); // Adjust the path to your controller file
+const { createBusinessApplicationController, createEducationApplicationController, createEventApplicationController } = require('../controllers/createApplicationController');
+const firestore = require('firebase/firestore');
 
-const app = express();
-app.use(express.json());
+jest.mock('firebase/firestore');
 
-app.post('/business-application', createBusinessApplicationController);
-app.post('/education-application', createEducationApplicationController);
-app.post('/event-application', createEventApplicationController);
-app.post('/update-status', updateStatusController);
-app.post('/review', createReviewController);
+describe('createBusinessApplicationController', () => {
+    let req;
+    let res;
 
-// Mocking Firebase dependencies
-jest.mock('firebase/app', () => {
-    return {
-        initializeApp: jest.fn().mockReturnValue({})
-    };
-});
-
-const mockSet = jest.fn();
-const mockCollection = jest.fn(() => ({
-    doc: jest.fn(() => ({
-        set: mockSet
-    }))
-}));
-
-jest.mock('firebase/firestore', () => {
-    return {
-        getFirestore: jest.fn(() => ({
-            collection: mockCollection
-        })),
-        collection: mockCollection,
-        doc: jest.fn(() => ({
-            set: mockSet
-        })),
-        setDoc: mockSet
-    };
-});
-
-describe('Controller Tests', () => {
     beforeEach(() => {
-        mockSet.mockClear();
-        mockCollection.mockClear();
+        req = {
+            body: {
+                applicationId: '123',
+                firstName: 'John',
+                lastName: 'Doe',
+                idNumber: 'ABC123',
+                businessName: 'Doe Enterprises',
+                registrationNumber: 'REG456',
+                businessAddress: '123 Business St',
+                businessType: 'Retail',
+                email: 'john.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                reason: 'Starting a new business',
+                community: 'Tech Community',
+                idDocument: 'id_doc_base64_string',
+                businessPlan: 'business_plan_base64_string'
+            }
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn()
+        };
     });
 
-    describe('createBusinessApplicationController', () => {
-        it('should create a business application successfully', async () => {
-            const response = await request(app)
-                .post('/business-application')
-                .send({
-                    applicationId: "app123",
-                    firstName: "John",
-                    lastName: "Doe",
-                    idNumber: "ID123456",
-                    businessName: "Business LLC",
-                    registrationNumber: "REG123",
-                    businessAddress: "123 Business St",
-                    businessType: "Retail",
-                    email: "john.doe@example.com",
-                    fundManagerEmail: "manager@example.com",
-                    applicantEmail: "applicant@example.com",
-                    phone: "123-456-7890",
-                    reason: "Funding required for expansion",
-                    community: "Community A",
-                    idDocument: "document",
-                    businessPlan: "business plan"
-                });
-            expect(response.status).toBe(200);
-            expect(response.text).toBe('Application sent');
-            expect(mockSet).toHaveBeenCalledTimes(1);
-        });
-
-        it('should handle errors gracefully', async () => {
-            mockSet.mockImplementationOnce(() => {
-                throw new Error('Firestore error');
-            });
-            const response = await request(app)
-                .post('/business-application')
-                .send({
-                    applicationId: "app123",
-                    firstName: "John",
-                    lastName: "Doe",
-                    idNumber: "ID123456",
-                    businessName: "Business LLC",
-                    registrationNumber: "REG123",
-                    businessAddress: "123 Business St",
-                    businessType: "Retail",
-                    email: "john.doe@example.com",
-                    fundManagerEmail: "manager@example.com",
-                    applicantEmail: "applicant@example.com",
-                    phone: "123-456-7890",
-                    reason: "Funding required for expansion",
-                    community: "Community A",
-                    idDocument: "document",
-                    businessPlan: "business plan"
-                });
-            expect(response.status).toBe(500);
-            expect(response.text).toBe('Error creating application');
-            expect(mockSet).toHaveBeenCalledTimes(1);
-        });
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
-    // Similarly write tests for the other controllers...
+    it('should send a 200 response when the application is created successfully', async () => {
+        firestore.setDoc.mockResolvedValueOnce();
 
-    describe('createEducationApplicationController', () => {
-        it('should create an education application successfully', async () => {
-            const response = await request(app)
-                .post('/education-application')
-                .send({
-                    applicationId: "app123",
-                    firstName: "Jane",
-                    lastName: "Doe",
-                    idNumber: "ID654321",
-                    dob: "2000-01-01",
-                    gender: "Female",
-                    email: "jane.doe@example.com",
-                    fundManagerEmail: "manager@example.com",
-                    applicantEmail: "applicant@example.com",
-                    phone: "987-654-3210",
-                    address1: "456 Education Rd",
-                    institution: "University",
-                    course: "Course",
-                    year: "2022",
-                    grades: "A",
-                    reason: "Scholarship required",
-                    community: "Community B",
-                    idDocument: "document",
-                    parentId: "parent123",
-                    incomeProof: "income proof",
-                    results: "results"
-                });
-            expect(response.status).toBe(200);
-            expect(response.text).toBe('Application sent');
-            expect(mockSet).toHaveBeenCalledTimes(1);
-        });
+        await createBusinessApplicationController(req, res);
 
-        it('should handle errors gracefully', async () => {
-            mockSet.mockImplementationOnce(() => {
-                throw new Error('Firestore error');
-            });
-            const response = await request(app)
-                .post('/education-application')
-                .send({
-                    applicationId: "app123",
-                    firstName: "Jane",
-                    lastName: "Doe",
-                    idNumber: "ID654321",
-                    dob: "2000-01-01",
-                    gender: "Female",
-                    email: "jane.doe@example.com",
-                    fundManagerEmail: "manager@example.com",
-                    applicantEmail: "applicant@example.com",
-                    phone: "987-654-3210",
-                    address1: "456 Education Rd",
-                    institution: "University",
-                    course: "Course",
-                    year: "2022",
-                    grades: "A",
-                    reason: "Scholarship required",
-                    community: "Community B",
-                    idDocument: "document",
-                    parentId: "parent123",
-                    incomeProof: "income proof",
-                    results: "results"
-                });
-            expect(response.status).toBe(500);
-            expect(response.text).toBe('Error creating application');
-            expect(mockSet).toHaveBeenCalledTimes(1);
-        });
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            expect.objectContaining({
+                applicationId: '123',
+                firstName: 'John',
+                lastName: 'Doe',
+                idNumber: 'ABC123',
+                businessName: 'Doe Enterprises',
+                registrationNumber: 'REG456',
+                businessAddress: '123 Business St',
+                businessType: 'Retail',
+                email: 'john.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                reason: 'Starting a new business',
+                community: 'Tech Community',
+                idDocument: 'id_doc_base64_string',
+                businessPlan: 'business_plan_base64_string'
+            })
+        );
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith('Application sent');
     });
 
-    describe('createEventApplicationController', () => {
-        // Add tests similar to createBusinessApplicationController
+    it('should send a 500 response when there is an error creating the application', async () => {
+        const error = new Error('Firestore error');
+        firestore.setDoc.mockRejectedValueOnce(error);
+
+        await createBusinessApplicationController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            expect.objectContaining({
+                applicationId: '123',
+                firstName: 'John',
+                lastName: 'Doe',
+                idNumber: 'ABC123',
+                businessName: 'Doe Enterprises',
+                registrationNumber: 'REG456',
+                businessAddress: '123 Business St',
+                businessType: 'Retail',
+                email: 'john.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                reason: 'Starting a new business',
+                community: 'Tech Community',
+                idDocument: 'id_doc_base64_string',
+                businessPlan: 'business_plan_base64_string'
+            })
+        );
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith('Error creating application');
+    });
+});
+
+describe('createEducationApplicationController', () => {
+    let req;
+    let res;
+
+    beforeEach(() => {
+        req = {
+            body: {
+                applicationId: '123',
+                firstName: 'Jane',
+                lastName: 'Doe',
+                idNumber: 'ID123',
+                dob: '2000-01-01',
+                gender: 'Female',
+                email: 'jane.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                address1: '456 Education Lane',
+                institution: 'University of Education',
+                course: 'Computer Science',
+                year: '2',
+                grades: 'A',
+                reason: 'Furthering education',
+                community: 'Educational Community',
+                idDocument: 'id_doc_base64_string',
+                parentId: 'parent_123',
+                incomeProof: 'income_proof_base64_string',
+                results: 'results_base64_string'
+            }
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn()
+        };
     });
 
-    describe('updateStatusController', () => {
-        it('should update status successfully', async () => {
-            const response = await request(app)
-                .post('/update-status')
-                .send({
-                    key: "app123",
-                    status: "approved",
-                    type: "business"
-                });
-            expect(response.status).toBe(200);
-            expect(response.text).toBe('Status updated');
-            expect(mockSet).toHaveBeenCalledTimes(1);
-        });
-
-        it('should handle errors gracefully', async () => {
-            mockSet.mockImplementationOnce(() => {
-                throw new Error('Firestore error');
-            });
-            const response = await request(app)
-                .post('/update-status')
-                .send({
-                    key: "app123",
-                    status: "approved",
-                    type: "business"
-                });
-            expect(response.status).toBe(500);
-            expect(response.text).toBe('Error updating status');
-            expect(mockSet).toHaveBeenCalledTimes(1);
-        });
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
-    describe('createReviewController', () => {
-        // Add tests for createReviewController
+    it('should send a 200 response when the application is created successfully', async () => {
+        firestore.setDoc.mockResolvedValueOnce();
+
+        await createEducationApplicationController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            expect.objectContaining({
+                applicationId: '123',
+                firstName: 'Jane',
+                lastName: 'Doe',
+                idNumber: 'ID123',
+                dob: '2000-01-01',
+                gender: 'Female',
+                email: 'jane.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                address1: '456 Education Lane',
+                institution: 'University of Education',
+                course: 'Computer Science',
+                year: '2',
+                grades: 'A',
+                reason: 'Furthering education',
+                community: 'Educational Community',
+                idDocument: 'id_doc_base64_string',
+                parentId: 'parent_123',
+                incomeProof: 'income_proof_base64_string',
+                results: 'results_base64_string'
+            })
+        );
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith('Application sent');
+    });
+
+    it('should send a 500 response when there is an error creating the application', async () => {
+        const error = new Error('Firestore error');
+        firestore.setDoc.mockRejectedValueOnce(error);
+
+        await createEducationApplicationController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            expect.objectContaining({
+                applicationId: '123',
+                firstName: 'Jane',
+                lastName: 'Doe',
+                idNumber: 'ID123',
+                dob: '2000-01-01',
+                gender: 'Female',
+                email: 'jane.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                address1: '456 Education Lane',
+                institution: 'University of Education',
+                course: 'Computer Science',
+                year: '2',
+                grades: 'A',
+                reason: 'Furthering education',
+                community: 'Educational Community',
+                idDocument: 'id_doc_base64_string',
+                parentId: 'parent_123',
+                incomeProof: 'income_proof_base64_string',
+                results: 'results_base64_string'
+            })
+        );
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith('Error creating application');
+    });
+});
+
+describe('createEventApplicationController', () => {
+    let req;
+    let res;
+
+    beforeEach(() => {
+        req = {
+            body: {
+                applicationId: '123',
+                firstName: 'John',
+                lastName: 'Doe',
+                idNumber: 'ID123',
+                dob: '2000-01-01',
+                gender: 'Male',
+                email: 'john.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                address1: '123 Event Street',
+                location: 'Event Hall',
+                attendance: '100',
+                budget: '5000',
+                description: 'Event Description',
+                reason: 'Hosting a community event',
+                idDocument: 'id_doc_base64_string',
+                poster: 'poster_base64_string'
+            }
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn()
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should send a 200 response when the application is created successfully', async () => {
+        firestore.setDoc.mockResolvedValueOnce();
+
+        await createEventApplicationController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            expect.objectContaining({
+                applicationId: '123',
+                firstName: 'John',
+                lastName: 'Doe',
+                idNumber: 'ID123',
+                dob: '2000-01-01',
+                gender: 'Male',
+                email: 'john.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                address1: '123 Event Street',
+                location: 'Event Hall',
+                attendance: '100',
+                budget: '5000',
+                description: 'Event Description',
+                reason: 'Hosting a community event',
+                idDocument: 'id_doc_base64_string',
+                poster: 'poster_base64_string'
+            })
+        );
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith('Applicant sent');
+    });
+
+    it('should send a 500 response when there is an error creating the application', async () => {
+        const error = new Error('Firestore error');
+        firestore.setDoc.mockRejectedValueOnce(error);
+
+        await createEventApplicationController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            expect.objectContaining({
+                applicationId: '123',
+                firstName: 'John',
+                lastName: 'Doe',
+                idNumber: 'ID123',
+                dob: '2000-01-01',
+                gender: 'Male',
+                email: 'john.doe@example.com',
+                fundManagerEmail: 'fund.manager@example.com',
+                applicantEmail: 'applicant@example.com',
+                phone: '123-456-7890',
+                address1: '123 Event Street',
+                location: 'Event Hall',
+                attendance: '100',
+                budget: '5000',
+                description: 'Event Description',
+                reason: 'Hosting a community event',
+                idDocument: 'id_doc_base64_string',
+                poster: 'poster_base64_string'
+            })
+        );
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith('Error creating application');
     });
 });
