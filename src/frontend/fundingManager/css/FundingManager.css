@@ -63,6 +63,8 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+
+  padding-right: 15px;
 }
 
 .navigation ul li {
@@ -146,6 +148,8 @@ body {
   min-height: 100vh;
   background: var(--white);
   transition: 0.5s;
+
+  padding: 15px;
 }
 .main.active {
   width: calc(100% - 80px);

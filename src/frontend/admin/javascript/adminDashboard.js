@@ -1,10 +1,3 @@
-const uid = sessionStorage.getItem('uid');
-const token = `?token=${uid}`;
-
-if (!uid){
-    alert("Fokkof");
-}
-
 function clearDOM() {
     const main = document.getElementById('content');
     while (main.hasChildNodes())
@@ -176,17 +169,6 @@ async function loadFundingAdverts() {
     }
 }
 
-async function logOut(){
-    try {
-        const data = await fetch('/api/admin/out' + token);
-        const response = await data.text();
-        sessionStorage.removeItem('uid');
-        alert(response);
-    } catch (e) {
-        console.error("ERROR:", e);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const fundingAds = document.getElementById('fundingAds');
     const userApplications = document.getElementById('userApplications');
@@ -196,5 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     userApplications.addEventListener('click', loadUserApplications);
 
-    signOut.addEventListener('click', logOut);
+    document.getElementById('signOut').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/login/logout');
+
+            const data = await response.text();
+            alert(data);
+            window.location.href = '../../login/html/login.html';
+        } catch (e) {
+            console.error("ERROR:", e);
+        }
+    });
 });

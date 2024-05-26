@@ -14,29 +14,26 @@ async function login(emailAddr, password) {
   };
 
   const data = await fetch('/api/login/', postOptions);
-  const response = await data.json();
+  const response = await data.text();
 
-  switch (response['message']) {
+  switch (response) {
     case "applicant":
       alert('Applicant successfully logged in');
       sessionStorage.setItem('loggedInApplicant', emailAddr);
-      sessionStorage.setItem('uid', response['uid']);
       window.location.href = "../../applicant/html/Applicant.html";
       break;
     case "fundingManager":
       alert('Funding manager successfully logged in');
       // Store email address in sessionStorage
       sessionStorage.setItem('loggedInFundingManager', emailAddr);
-      sessionStorage.setItem('uid', response['uid']);
       window.location.href = "../../fundingManager/html/FundingManager.html";
       break;
     case "admin":
       alert('Admin successfully logged in');
-      sessionStorage.setItem('uid', response['uid']);
       window.location.href = "../../admin/html/adminDashboard.html";
       break;
     default:
-      alert(response['message']);
+      alert(response);
       break;
   }
 }

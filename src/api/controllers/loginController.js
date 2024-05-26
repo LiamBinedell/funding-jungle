@@ -51,11 +51,8 @@ const loginController = async (req, res) => {
 
             if (documentSnapshot.exists()){
                 const role = documentSnapshot.data()["role"];
-                const result = {
-                    uid: user.uid,
-                    message: role
-                };
-                res.status(200).json(result);
+
+                res.status(200).send(role);
             }
         }
     } catch (e) {
@@ -64,4 +61,14 @@ const loginController = async (req, res) => {
     }
 };
 
-module.exports = {loginController, checkIfAccountActivated};
+const logoutController = async (req, res) => {
+    try {
+        await authorization.signOut(auth);
+        res.status(200).send('Logging out...');
+    } catch (e) {
+        console.log("ERROR:", e);
+        res.status(500).send('Error logging out');
+    }
+}
+
+module.exports = {loginController, checkIfAccountActivated, logoutController};
