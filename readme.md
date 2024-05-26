@@ -1,7 +1,14 @@
-# Vanilla JavaScript App
+Running Funding Jungle Locally
 
-[Azure Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/overview) allows you to easily build JavaScript apps in minutes. Use this repo with the [quickstart](https://docs.microsoft.com/azure/static-web-apps/getting-started?tabs=vanilla-javascript) to build and customize a new static site.
+Download Repository: Ensure you have the repository contents on your machine.
 
-This repo is used as a starter for a _very basic_ HTML web application using no front-end frameworks.
+Open Terminal: Navigate to the project directory or directly to the "funding-jungle/src/" folder within it.
 
-This repo has a dev container. This means if you open it inside a [GitHub Codespace](https://github.com/features/codespaces), or using [VS Code with the remote containers extension](https://code.visualstudio.com/docs/remote/containers), it will be opened inside a container with all the dependencies already installed.
+Start Server: In the terminal, run either:
+
+- node src/index.js from the project directory, or
+- node index.js from "funding-jungle/src/".
+  
+Access the Web App: Once the server outputs "Listening on 3000", open your preferred browser and go to "localhost:3000".
+
+Enjoy Funding Jungle!
