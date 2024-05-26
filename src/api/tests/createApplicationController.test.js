@@ -1,4 +1,4 @@
-const { createBusinessApplicationController, createEducationApplicationController, createEventApplicationController } = require('../controllers/createApplicationController');
+const { createBusinessApplicationController, createEducationApplicationController, createEventApplicationController, updateStatusController, createReviewController } = require('../controllers/createApplicationController');
 const firestore = require('firebase/firestore');
 
 jest.mock('firebase/firestore');
@@ -315,5 +315,126 @@ describe('createEventApplicationController', () => {
         );
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalledWith('Error creating application');
+    });
+});
+
+describe('updateStatusController', () => {
+    let req;
+    let res;
+
+    beforeEach(() => {
+        req = {
+            body: {
+                key: 'application_key',
+                status: 'approved',
+                type: 'education'
+            }
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn()
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should update the status of an application and send a 200 response', async () => {
+        firestore.setDoc.mockResolvedValueOnce();
+
+        await updateStatusController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            { status: 'approved' },
+            { merge: true }
+        );
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith('Status updated');
+    });
+
+    it('should send a 500 response when there is an error updating the status', async () => {
+        const error = new Error('Firestore error');
+        firestore.setDoc.mockRejectedValueOnce(error);
+
+        await updateStatusController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            { status: 'approved' },
+            { merge: true }
+        );
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith('Error updating status');
+    });
+});
+
+describe('createReviewController', () => {
+    let req;
+    let res;
+
+    beforeEach(() => {
+        req = {
+            body: {
+                name: 'John Doe',
+                company: 'Doe Enterprises',
+                email: 'john.doe@example.com',
+                message: 'Great service!',
+                applicantEmail: 'applicant@example.com',
+                date: '2024-05-26'
+            }
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            send: jest.fn()
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should post a review and send a 200 response', async () => {
+        firestore.setDoc.mockResolvedValueOnce();
+
+        await createReviewController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            {
+                name: 'John Doe',
+                company: 'Doe Enterprises',
+                email: 'john.doe@example.com',
+                message: 'Great service!',
+                applicantEmail: 'applicant@example.com',
+                date: '2024-05-26'
+            }
+        );
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith('Review posted');
+    });
+
+    it('should send a 500 response when there is an error posting the review', async () => {
+        const error = new Error('Firestore error');
+        firestore.setDoc.mockRejectedValueOnce(error);
+
+        await createReviewController(req, res);
+
+        expect(firestore.setDoc).toHaveBeenCalledWith(
+            undefined,
+            {
+                name: 'John Doe',
+                company: 'Doe Enterprises',
+                email: 'john.doe@example.com',
+                message: 'Great service!',
+                applicantEmail: 'applicant@example.com',
+                date: '2024-05-26'
+            }
+        );
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledWith('Error posting review');
     });
 });
