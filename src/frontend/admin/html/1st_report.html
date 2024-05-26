@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+   
+
+</head>
+<body>
+
+ 
+    <div class="container" >
+        
+        <table  id="dataTable"  class="table" style="width: 100%">
+            <thead>
+                
+                <th>email</th>
+                <th>name</th>
+                <th>role</th>
+                <th>surname</th>
+                <th>no</th>
+
+            </thead>
+            <tbody id="tbody1"></tbody>
+        </table>
+        <button id="btnExportToCsv" type="button" class="button">Export to CSV</button>
+        <script>
+            const dataTable = document.getElementById("dataTable");
+            const btnExportToCsv = document.getElementById("btnExportToCsv");
+    
+            btnExportToCsv.addEventListener("click", () => {
+                const exporter = new TableCSVExporter(dataTable);
+                const csvOutput = exporter.convertToCSV();
+                const csvBlob = new Blob([csvOutput], { type: "text/csv" });
+                const blobUrl = URL.createObjectURL(csvBlob);
+                const anchorElement = document.createElement("a");
+    
+                anchorElement.href = blobUrl;
+                anchorElement.download = "table-export.csv";
+                anchorElement.click();
+    
+                setTimeout(() => {
+                    URL.revokeObjectURL(blobUrl);
+                }, 500);
+            });
+
+            
+
+
+        </script>
+    </div>
+   
+    <script type="module">
+        var stdNo = 1;
+        var tbody = document.getElementById('tbody1')
+
+        function AddItemtoTable(email, name, role, surname) {
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
+            let td4 = document.createElement('td');
+            let td5 = document.createElement('td');
+            
+
+            
+            td1.innerHTML = email;
+            td2.innerHTML = name;
+            td3.innerHTML = role;
+            td4.innerHTML = surname;
+            td5.innerHTML = ++stdNo;
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            tr.appendChild(td5);
+            
+           
+            tbody.appendChild(tr);
+        }
+
+        function AddAllAItemsToTheTable(TheStudent) {
+            stdNo = 0;
+            tbody.innerHTML = "";
+            TheStudent.forEach(element => {
+                AddItemtoTable(element.email, element.name, element.role, element.surname);
+            });
+        }
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1bLJJAlJWzwcg4Dvku1KZM3cgR4TbONM",
+            authDomain: "fundingjungle-1f03d.firebaseapp.com",
+            databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com",
+            projectId: "fundingjungle-1f03d",
+            storageBucket: "fundingjungle-1f03d.appspot.com",
+            messagingSenderId: "642664605739",
+            appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
+            measurementId: "G-Q92887FDM2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        import { getFirestore, doc, getDocs, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        const db = getFirestore();
+
+        async function GetALLDataOnce() {
+            const querySnapshot = await getDocs(collection(db, "users"));
+            var students = [];
+
+            querySnapshot.forEach(doc => {
+                students.push(doc.data());
+            });
+
+            AddAllAItemsToTheTable(students);
+        }
+
+        window.onload = GetALLDataOnce;
+
+    </script>
+    <script>
+        class TableCSVExporter {
+    constructor (table, includeHeaders = true) {
+        this.table = table;
+        this.rows = Array.from(table.querySelectorAll("tr"));
+
+        if (!includeHeaders && this.rows[0].querySelectorAll("th").length) {
+            this.rows.shift();
+        }
+    }
+
+    convertToCSV () {
+        const lines = [];
+        const numCols = this._findLongestRowLength();
+
+        for (const row of this.rows) {
+            let line = "";
+
+            for (let i = 0; i < numCols; i++) {
+                if (row.children[i] !== undefined) {
+                    line += TableCSVExporter.parseCell(row.children[i]);
+                }
+
+                line += (i !== (numCols - 1)) ? "," : "";
+            }
+
+            lines.push(line);
+        }
+
+        return lines.join("\n");
+    }
+
+    _findLongestRowLength () {
+        return this.rows.reduce((l, row) => row.childElementCount > l ? row.childElementCount : l, 0);
+    }
+
+    static parseCell (tableCell) {
+        let parsedValue = tableCell.textContent;
+
+        // Replace all double quotes with two double quotes
+        parsedValue = parsedValue.replace(/"/g, `""`);
+
+        // If value contains comma, new-line or double-quote, enclose in double quotes
+        parsedValue = /[",\n]/.test(parsedValue) ? `"${parsedValue}"` : parsedValue;
+
+        return parsedValue;
+    }
+}
+
+    </script>
+    
+</body>
+</html>
