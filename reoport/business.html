@@ -49,8 +49,43 @@
         <!-- Your table data goes here -->
       </table>
     </div>
+    <button onclick="demoFromHTML()">PDF</button>
     <button id="btnExportToCsv" type="button" class="button">Export to CSV</button>
   </div>
   <script type="module" src="../business.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+  <script>
+      window.jsPDF = window.jspdf.jsPDF;
+
+      function demoFromHTML() {
+          var pdf = new jsPDF('p', 'pt', 'letter');
+          var source = document.getElementById('dataTable'); // Use the table ID instead of the div ID
+
+          html2canvas(source, {
+              onrendered: function (canvas) {
+                  var imgData = canvas.toDataURL('image/png');
+                  var imgWidth = 210; 
+                  var pageHeight = 295;  
+                  var imgHeight = canvas.height * imgWidth / canvas.width;
+                  var heightLeft = imgHeight;
+
+                  var doc = new jsPDF('p', 'mm');
+                  var position = 0;
+
+                  doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                  heightLeft -= pageHeight;
+
+                  while (heightLeft >= 0) {
+                      position = heightLeft - imgHeight;
+                      doc.addPage();
+                      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                      heightLeft -= pageHeight;
+                  }
+                  doc.save('Test.pdf');
+              }
+          });
+      }
+  </script>
 </body>
 </html>
