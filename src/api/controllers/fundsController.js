@@ -1,22 +1,22 @@
-const { firestore } = require('firebase-admin');
-const firebase = require('firebase/app');
-require('firebase/auth');
-require('firebase/firestore');
+const authorization = require('firebase/auth');
+const firebaseApp = require('firebase/app');
+const firestore = require('firebase/firestore');
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB1bLJJAlJWzwcg4Dvku1KZM3cgR4TbONM",
-    authDomain: "fundingjungle-1f03d.firebaseapp.com",
-    databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com",
-    projectId: "fundingjungle-1f03d",
-    storageBucket: "fundingjungle-1f03d.appspot.com",
-    messagingSenderId: "642664605739",
-    appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
-    measurementId: "G-Q92887FDM2"
-  };
+  apiKey: "AIzaSyB1bLJJAlJWzwcg4Dvku1KZM3cgR4TbONM",
+  authDomain: "fundingjungle-1f03d.firebaseapp.com",
+  databaseURL: "https://fundingjungle-1f03d-default-rtdb.firebaseio.com",
+  projectId: "fundingjungle-1f03d",
+  storageBucket: "fundingjungle-1f03d.appspot.com",
+  messagingSenderId: "642664605739",
+  appId: "1:642664605739:web:e2d4ae726c712f84c6226e",
+  measurementId: "G-Q92887FDM2"
+};
 
 // Initialize Firebase
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const firebaseDB = firebaseApp.initializeApp(firebaseConfig);
+const db = firestore.getFirestore(firebaseDB);
+const auth = authorization.getAuth();
 
 const addFundsController = async (req, res) => {
     const { amount } = req.body;
