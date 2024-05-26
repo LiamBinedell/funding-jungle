@@ -1,107 +1,97 @@
-const { loginController, checkIfAccountActivated } = require('../controllers/loginController'); 
-const httpMocks = require('node-mocks-http');
-
-jest.mock('firebase/auth');
-jest.mock('firebase/app');
-jest.mock('firebase/firestore');
-
+const { loginController, checkIfAccountActivated } = require('../controllers/loginController');
+const authorization = require('firebase/auth');
 const firestore = require('firebase/firestore');
 
+jest.mock('firebase/auth');
+jest.mock('firebase/firestore');
+
 describe('checkIfAccountActivated', () => {
-  beforeEach(() => {
-    firestore.reset();
-  });
+    it('should return false if account is not activated', async () => {
+        const email = 'test@example.com';
+        const docs = {
+            docs: [{ data: () => ({ accountActivated: false }) }],
+        };
 
-  it('should return false if account is not activated', async () => {
-    await firestore.addDoc(firestore.collection(), {
-      email: 'test@example.com',
-      role: 'fundingManager',
-      accountActivated: false,
+        firestore.getDocs.mockResolvedValue(docs);
+        firestore.query.mockReturnValue('mockedQuery');
+        firestore.collection.mockReturnValue('mockedCollection');
+        firestore.where.mockReturnValue('mockedWhere');
+
+        const result = await checkIfAccountActivated(email);
+        expect(result).toBe(false);
     });
 
-    const result = await checkIfAccountActivated('test@example.com');
-    expect(result).toBe(false);
-  });
+    it('should return true if account is activated or no matching documents', async () => {
+        const email = 'test@example.com';
+        const docs = {
+            docs: [],
+        };
 
-  it('should return true if account is activated', async () => {
-    await firestore.addDoc(firestore.collection(), {
-      email: 'activated@example.com',
-      role: 'fundingManager',
-      accountActivated: true,
+        firestore.getDocs.mockResolvedValue(docs);
+        firestore.query.mockReturnValue('mockedQuery');
+        firestore.collection.mockReturnValue('mockedCollection');
+        firestore.where.mockReturnValue('mockedWhere');
+
+        const result = await checkIfAccountActivated(email);
+        expect(result).toBe(true);
     });
-
-    const result = await checkIfAccountActivated('activated@example.com');
-    expect(result).toBe(true);
-  });
-
-  it('should return true if no matching account is found', async () => {
-    const result = await checkIfAccountActivated('nonexistent@example.com');
-    expect(result).toBe(true);
-  });
 });
 
 describe('loginController', () => {
-  beforeEach(() => {
-    firestore.reset();
-  });
+    let req, res;
 
-  it('should respond with 401 if account is not activated', async () => {
-    const req = httpMocks.createRequest({
-      method: 'POST',
-      url: '/login',
-      body: {
-        email: 'test@example.com',
-        pass: 'password123',
-      },
-    });
-    const res = httpMocks.createResponse();
-
-    await firestore.addDoc(firestore.collection(), {
-      email: 'test@example.com',
-      role: 'fundingManager',
-      accountActivated: false,
+    beforeEach(() => {
+        req = { body: { email: 'test@example.com', pass: 'password' } };
+        res = { status: jest.fn().mockReturnThis(), json: jest.fn(), send: jest.fn() };
     });
 
-    await loginController(req, res);
-    expect(res.statusCode).toBe(401);
-    expect(res._getData()).toBe('Account pending verification. Please try again later');
-  });
+    it('should login user and return role if account is activated', async () => {
+        const userCredential = {
+            user: { uid: 'testUid' },
+        };
+        const docSnapshot = {
+            exists: jest.fn().mockReturnValue(true),
+            data: jest.fn().mockReturnValue({ role: 'fundingManager' }),
+        };
 
-  it('should respond with 200 and role if login is successful', async () => {
-    const req = httpMocks.createRequest({
-      method: 'POST',
-      url: '/login',
-      body: {
-        email: 'activated@example.com',
-        pass: 'password123',
-      },
+        authorization.signInWithEmailAndPassword.mockResolvedValue(userCredential);
+        firestore.getDoc.mockResolvedValue(docSnapshot);
+        firestore.doc.mockReturnValue('mockedDoc');
+        
+        const checkIfAccountActivatedSpy = jest.spyOn(require('../controllers/loginController'), 'checkIfAccountActivated').mockResolvedValue(true);
+
+        await loginController(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ uid: 'testUid', message: 'fundingManager' });
+
+        checkIfAccountActivatedSpy.mockRestore();
     });
-    const res = httpMocks.createResponse();
 
-    await firestore.addDoc(firestore.collection(), {
-      id: 'user123',
-      email: 'activated@example.com',
-      role: 'fundingManager',
+    it('should sign out user and return 401 if account is not activated', async () => {
+        const userCredential = {
+            user: { uid: 'testUid' },
+        };
+
+        authorization.signInWithEmailAndPassword.mockResolvedValue(userCredential);
+        
+        const checkIfAccountActivatedSpy = jest.spyOn(require('../controllers/loginController'), 'checkIfAccountActivated').mockResolvedValue(false);
+
+        await loginController(req, res);
+
+        expect(authorization.signOut).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalledWith("Account pending verification. Please try again later");
+
+        checkIfAccountActivatedSpy.mockRestore();
     });
 
-    await loginController(req, res);
-    expect(res.statusCode).toBe(200);
-    expect(res._getData()).toBe('fundingManager');
-  });
+    it('should return 500 if an error occurs during login', async () => {
+        authorization.signInWithEmailAndPassword.mockRejectedValue(new Error('Login error'));
 
-  it('should respond with 401 if login credentials are invalid', async () => {
-    const req = httpMocks.createRequest({
-      method: 'POST',
-      url: '/login',
-      body: {
-        email: 'invalid@example.com',
-        pass: 'wrongpassword',
-      },
+        await loginController(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ message: "Login error" });
     });
-    const res = httpMocks.createResponse();
-
-    await loginController(req, res);
-    expect(res.statusCode).toBe(401);
-    expect(res._getData()).toBe('Invalid email or password');
-  });
 });

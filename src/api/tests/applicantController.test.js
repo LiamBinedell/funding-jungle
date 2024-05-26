@@ -1,60 +1,73 @@
 const { getAdsController } = require('../controllers/applicantController');
-const { firestore } = require('firebase-admin');
-const httpMocks = require('node-mocks-http');
 
-// Mock Firestore functions
-jest.mock('firebase-admin', () => {
-    const firestoreMock = {
-        collection: jest.fn(),
-        query: jest.fn(),
-        getDocs: jest.fn(),
-    };
-    return {
-        firestore: firestoreMock,
-    };
-});
+// Mock Firebase services
+const firebaseApp = require('firebase/app');
+const firestore = require('firebase/firestore');
+const authorization = require('firebase/auth');
+
+jest.mock('firebase/app', () => ({
+  initializeApp: jest.fn(),
+}));
+jest.mock('firebase/firestore', () => ({
+  getFirestore: jest.fn(),
+  collection: jest.fn(),
+  query: jest.fn(),
+  getDocs: jest.fn(),
+}));
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(),
+}));
 
 describe('getAdsController', () => {
-    let req, res;
+  test('should return ads array', async () => {
+    // Mock Firestore functions
+    const mockCollection = jest.fn();
+    const mockQuery = jest.fn();
+    const mockGetDocs = jest.fn(() => ({
+      docs: [{ id: '1', data: () => ({ /* ad data */ }) }],
+    }));
 
-    beforeEach(() => {
-        req = httpMocks.createRequest();
-        res = httpMocks.createResponse();
-        firestore.collection.mockClear();
-        firestore.query.mockClear();
-        firestore.getDocs.mockClear();
+    // Mock Firestore collection and query
+    firestore.collection.mockImplementationOnce(mockCollection);
+    firestore.query.mockImplementationOnce(mockQuery);
+    firestore.getDocs.mockImplementationOnce(mockGetDocs);
+
+    // Mock Express response object
+    const mockRes = {
+      status: jest.fn(() => mockRes),
+      json: jest.fn(),
+    };
+
+    // Call the controller function
+    await getAdsController({}, mockRes);
+
+    // Assert the response
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith([{ id: '1', data: { /* ad data */ } }]);
+
+    // Assert Firestore function calls
+    expect(firestore.collection).toHaveBeenCalledWith(undefined, 'adverts');
+    expect(firestore.query).toHaveBeenCalled();
+    expect(firestore.getDocs).toHaveBeenCalled();
+  });
+
+  test('should handle error', async () => {
+    // Mock Firestore functions to throw an error
+    firestore.getDocs.mockImplementationOnce(() => {
+      throw new Error('Firestore error');
     });
 
-    test('should return ads successfully', async () => {
-        // Setup mock data
-        const mockDocs = [
-            { id: '1', data: () => ({ title: 'Ad 1' }) },
-            { id: '2', data: () => ({ title: 'Ad 2' }) },
-        ];
-        firestore.getDocs.mockResolvedValueOnce({ docs: mockDocs });
+    // Mock Express response object
+    const mockRes = {
+      status: jest.fn(() => mockRes),
+      send: jest.fn(),
+    };
 
-        await getAdsController(req, res);
+    // Call the controller function
+    await getAdsController({}, mockRes);
 
-        const ads = res._getJSONData();
-        expect(res.statusCode).toBe(200);
-        /* Naughty tests go in the comment zone
-        expect(ads).toEqual([
-            { id: '1', data: { title: 'Ad 1' } },
-            { id: '2', data: { title: 'Ad 2' } },
-        ]);
-        //*/
-    });
-    /* Naughty tests go in the comment zone
-    test('should handle Firestore errors', async () => {
-        // Setup mock error
-        const mockError = new Error('Firestore error');
-        firestore.getDocs.mockRejectedValueOnce(mockError);
-
-        await getAdsController(req, res);
-
-        expect(res.statusCode).toBe(500);
-        expect(res._getData()).toBe('Error fetching ads');
-        expect(console.error).toHaveBeenCalledWith('ERROR:', mockError);
-    });
-    //*/
+    // Assert the error handling
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.send).toHaveBeenCalledWith('Error fetching ads');
+  });
 });
