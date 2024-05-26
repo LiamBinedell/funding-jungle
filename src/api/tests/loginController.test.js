@@ -1,97 +1,108 @@
-const { loginController, checkIfAccountActivated } = require('../controllers/loginController');
-const authorization = require('firebase/auth');
-const firestore = require('firebase/firestore');
+const { loginController, logoutController } = require('../controllers/loginController');
+const supertest = require('supertest');
+const express = require('express');
+const bodyParser = require('body-parser');
+const { getAuth, signInWithEmailAndPassword, signOut } = require('firebase/auth');
+const { getFirestore, collection, query, where, getDocs, doc, getDoc } = require('firebase/firestore');
 
-jest.mock('firebase/auth');
-jest.mock('firebase/firestore');
+// Mock Firebase functions
+jest.mock('firebase/auth', () => ({
+    getAuth: jest.fn(),
+    signInWithEmailAndPassword: jest.fn(),
+    signOut: jest.fn()
+}));
 
-describe('checkIfAccountActivated', () => {
-    it('should return false if account is not activated', async () => {
-        const email = 'test@example.com';
-        const docs = {
-            docs: [{ data: () => ({ accountActivated: false }) }],
-        };
+jest.mock('firebase/firestore', () => ({
+    getFirestore: jest.fn(),
+    collection: jest.fn(),
+    query: jest.fn(),
+    where: jest.fn(),
+    getDocs: jest.fn(),
+    doc: jest.fn(),
+    getDoc: jest.fn()
+}));
 
-        firestore.getDocs.mockResolvedValue(docs);
-        firestore.query.mockReturnValue('mockedQuery');
-        firestore.collection.mockReturnValue('mockedCollection');
-        firestore.where.mockReturnValue('mockedWhere');
+// Setup Express app
+const app = express();
+app.use(bodyParser.json());
+app.post('/login', loginController);
+app.post('/logout', logoutController);
 
-        const result = await checkIfAccountActivated(email);
-        expect(result).toBe(false);
-    });
-
-    it('should return true if account is activated or no matching documents', async () => {
-        const email = 'test@example.com';
-        const docs = {
-            docs: [],
-        };
-
-        firestore.getDocs.mockResolvedValue(docs);
-        firestore.query.mockReturnValue('mockedQuery');
-        firestore.collection.mockReturnValue('mockedCollection');
-        firestore.where.mockReturnValue('mockedWhere');
-
-        const result = await checkIfAccountActivated(email);
-        expect(result).toBe(true);
-    });
-});
-
-describe('loginController', () => {
-    let req, res;
-
+describe('Auth Controller Tests', () => {
     beforeEach(() => {
-        req = { body: { email: 'test@example.com', pass: 'password' } };
-        res = { status: jest.fn().mockReturnThis(), json: jest.fn(), send: jest.fn() };
+        jest.clearAllMocks();
     });
 
-    it('should login user and return role if account is activated', async () => {
-        const userCredential = {
-            user: { uid: 'testUid' },
-        };
-        const docSnapshot = {
-            exists: jest.fn().mockReturnValue(true),
-            data: jest.fn().mockReturnValue({ role: 'fundingManager' }),
-        };
+    it('should login successfully with an activated account', async () => {
+        // Mock user credential
+        const mockUser = { uid: '12345', email: 'test@example.com' };
 
-        authorization.signInWithEmailAndPassword.mockResolvedValue(userCredential);
-        firestore.getDoc.mockResolvedValue(docSnapshot);
-        firestore.doc.mockReturnValue('mockedDoc');
-        
-        const checkIfAccountActivatedSpy = jest.spyOn(require('../controllers/loginController'), 'checkIfAccountActivated').mockResolvedValue(true);
+        // Mock Firebase auth functions
+        signInWithEmailAndPassword.mockResolvedValue({ user: mockUser });
 
-        await loginController(req, res);
+        // Mock Firebase Firestore functions
+        getDocs.mockResolvedValue({ docs: [] }); // No documents with accountActivated: false
+        getDoc.mockResolvedValue({
+            exists: true,
+            data: () => ({ role: 'user' })
+        });
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ uid: 'testUid', message: 'fundingManager' });
+        // Perform the request
+        const res = await supertest(app)
+            .post('/login')
+            .send({ email: 'test@example.com', pass: 'correctpassword' });
 
-        checkIfAccountActivatedSpy.mockRestore();
+        // Assert the response
+        expect(res.status).toBe(200);
+        expect(res.text).toBe('user');
     });
 
-    it('should sign out user and return 401 if account is not activated', async () => {
-        const userCredential = {
-            user: { uid: 'testUid' },
-        };
+    it('should fail login with a pending verification account', async () => {
+        // Mock user credential
+        const mockUser = { uid: '12345', email: 'test@example.com' };
 
-        authorization.signInWithEmailAndPassword.mockResolvedValue(userCredential);
-        
-        const checkIfAccountActivatedSpy = jest.spyOn(require('../controllers/loginController'), 'checkIfAccountActivated').mockResolvedValue(false);
+        // Mock Firebase auth functions
+        signInWithEmailAndPassword.mockResolvedValue({ user: mockUser });
 
-        await loginController(req, res);
+        // Mock Firebase Firestore functions
+        getDocs.mockResolvedValue({
+            docs: [{ data: () => ({ accountActivated: false }) }]
+        });
 
-        expect(authorization.signOut).toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.send).toHaveBeenCalledWith("Account pending verification. Please try again later");
+        // Perform the request
+        const res = await supertest(app)
+            .post('/login')
+            .send({ email: 'test@example.com', pass: 'correctpassword' });
 
-        checkIfAccountActivatedSpy.mockRestore();
+        // Assert the response
+        expect(res.status).toBe(401);
+        expect(res.text).toBe('Account pending verification. Please try again later');
     });
 
-    it('should return 500 if an error occurs during login', async () => {
-        authorization.signInWithEmailAndPassword.mockRejectedValue(new Error('Login error'));
+    it('should fail login with incorrect credentials', async () => {
+        // Mock Firebase auth functions
+        signInWithEmailAndPassword.mockRejectedValue(new Error('Incorrect credentials'));
 
-        await loginController(req, res);
+        // Perform the request
+        const res = await supertest(app)
+            .post('/login')
+            .send({ email: 'test@example.com', pass: 'wrongpassword' });
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ message: "Login error" });
+        // Assert the response
+        expect(res.status).toBe(500);
+        expect(res.body.message).toBe('Login error');
+    });
+
+    it('should logout successfully', async () => {
+        // Mock Firebase auth functions
+        signOut.mockResolvedValue();
+
+        // Perform the request
+        const res = await supertest(app)
+            .post('/logout');
+
+        // Assert the response
+        expect(res.status).toBe(200);
+        expect(res.text).toBe('Logging out...');
     });
 });
