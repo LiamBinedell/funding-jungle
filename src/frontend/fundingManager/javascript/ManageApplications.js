@@ -26,7 +26,7 @@ function getEducationalForms() {
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
             // Filter forms by fundManagerEmail and status
-            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status !== 'Approved' && data.status !== 'Declined') {
+            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status == 'Pending' ) {
                 addEducationalFormAsListItem(data);
             }
         });
@@ -107,7 +107,7 @@ function getBusinessForms() {
             const data = childSnapshot.val();
             // Filter forms by fundManagerEmail
             // Filter forms by fundManagerEmail and status
-            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status !== 'Approved' && data.status !== 'Declined') {
+            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status == 'Pending' ) {
                 addBusinessFormAsListItem(data);
             }
         });
@@ -180,7 +180,7 @@ function getEventForms() {
         snapshot.forEach((childSnapshot) => {
             const data = childSnapshot.val();
             // Filter forms by fundManagerEmail and status
-            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status !== 'Approved' && data.status !== 'Declined') {
+            if (data.fundManagerEmail === sessionStorage.getItem('loggedInFundingManager') && data.status == 'Pending' ) {
                 addEventFormAsListItem(data);
             }
         });
