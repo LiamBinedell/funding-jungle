@@ -111,15 +111,4 @@ const denyUserController = async (req, res) => {
     res.status(500).send(`Error deleting user`);
 };
 
-const logOutController = async (req, res) => {
-  try {
-    await authorization.signOut(auth);
-
-    res.status(200).send('Logged out');
-  } catch (e) {
-    console.error("ERROR", e);
-    res.status(500).send('Error logging out');
-  }
-}
-
-module.exports = { getUnactivatedController, approveUserController, denyUserController, logOutController };
+module.exports = { getUnactivatedController, approveUserController, denyUserController };
