@@ -68,35 +68,16 @@ describe('loginController', () => {
         checkIfAccountActivatedSpy.mockRestore();
     });
 
-    //* Naughty tests go in the comment zone
     it('should sign out user and return 401 if account is not activated', async () => {
         const userCredential = {
             user: { uid: 'testUid' },
         };
 
         authorization.signInWithEmailAndPassword.mockResolvedValue(userCredential);
-        authorization.signOut.mockResolvedValue(); // Ensure signOut is mocked
-
+        
         const checkIfAccountActivatedSpy = jest.spyOn(require('../controllers/loginController'), 'checkIfAccountActivated').mockResolvedValue(false);
 
-        // Add debugging statements inside loginController
-        const originalLoginController = require('../controllers/loginController').loginController;
-        const loginControllerWithDebug = async (req, res) => {
-            try {
-                console.log('Starting loginController');
-                await originalLoginController(req, res);
-                console.log('Finished loginController');
-            } catch (error) {
-                console.error('loginController error:', error);
-            }
-        };
-
-        await loginControllerWithDebug(req, res);
-
-        // Log the result to help debugging
-        console.log('Authorization SignOut Calls:', authorization.signOut.mock.calls);
-        console.log('Response Status Calls:', res.status.mock.calls);
-        console.log('Response Send Calls:', res.send.mock.calls);
+        await loginController(req, res);
 
         expect(authorization.signOut).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(401);
@@ -104,7 +85,6 @@ describe('loginController', () => {
 
         checkIfAccountActivatedSpy.mockRestore();
     });
-    //*/
 
     it('should return 500 if an error occurs during login', async () => {
         authorization.signInWithEmailAndPassword.mockRejectedValue(new Error('Login error'));
