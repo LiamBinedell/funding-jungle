@@ -7,15 +7,16 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-}
-
-#contact-container {
+  }
+  
+  #contact-container {
     max-width: 800px;
     width: 100%;
     padding: 20px;
-}
-
-.notification {
+  }
+  
+  .notification {
+    position: relative;
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -23,20 +24,42 @@ body {
     margin: 20px 0;
     padding: 30px;
     transition: transform 0.3s ease;
-}
-
-.notification:hover {
+  }
+  
+  .notification:hover {
     transform: translateY(-5px);
-}
-
-h1 {
-    text-align: center;
-    margin: 20px 0;
-    color: #4CAF50;
-}
-
-.notification p {
+  }
+  
+  .notification-content p {
     margin: 10px 0;
     font-size: 18px;
     color: #333;
-}
+  }
+  
+  .delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease;
+  }
+  
+  .delete-icon:hover {
+    color: #e74c3c;
+  }
+  
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #4CAF50;
+  }
+  
+  /* Custom tooltip styles */
+  .delete-icon[title] {
+    position: relative;
+  }
+  
+
+  
